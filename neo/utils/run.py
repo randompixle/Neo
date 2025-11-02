@@ -1,28 +1,18 @@
-import os, re, shutil, subprocess, sys, time
-from typing import List, Optional, Tuple
 
-def shlex_join(parts: List[str]) -> str:
-    out = []
-    for p in parts:
-        if re.search(r'\s|["\'\\]', p):
-            out.append("'" + p.replace("'", "'\"'\"'") + "'")
-        else:
-            out.append(p)
-    return " ".join(out)
+import subprocess
 
-def which(cmd: str) -> Optional[str]:
-    return shutil.which(cmd)
-
-def run(cmd: List[str], use_sudo: bool = False, check: bool = False) -> int:
-    real_cmd = (["sudo"] + cmd) if use_sudo and os.geteuid() != 0 else cmd
-    print("$ " + shlex_join(real_cmd))
+def run(cmd, use_sudo=False, check=False):
+    if use_sudo:
+        cmd = ["sudo"] + list(cmd)
     try:
-        return subprocess.call(real_cmd)
+        proc = subprocess.run(cmd, check=check)
+        return proc.returncode
     except FileNotFoundError:
-        print(f"neo: command not found: {cmd[0]}", file=sys.stderr)
+        print(f"$ {' '.join(cmd)}")
+        print('Command not found')
         return 127
 
-def run_capture(cmd: List[str]) -> Tuple[int, str]:
+def run_capture(cmd):
     try:
         out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, text=True)
         return 0, out
@@ -30,11 +20,3 @@ def run_capture(cmd: List[str]) -> Tuple[int, str]:
         return e.returncode, e.output
     except FileNotFoundError:
         return 127, ""
-
-def require_network_tools() -> Optional[str]:
-    # prefer curl then wget
-    if which("curl"):
-        return "curl"
-    if which("wget"):
-        return "wget"
-    return None

@@ -1,34 +1,33 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e
 
-# Detect HOME and user safely
-HOME_DIR="${HOME:-$(getent passwd "$(id -u)" | cut -d: -f6)}"
-BIN_DIR="$HOME_DIR/.local/bin"
-CFG_DIR="$HOME_DIR/.config/neo"
+echo "Installing Neo v0.4 — Project: Eclipse…"
 
-echo "[neo] Installing into $BIN_DIR ..."
+INSTALL_BASE="$HOME/.local/share/neo"
+BIN_DIR="$HOME/.local/bin"
 
-mkdir -p "$BIN_DIR" "$CFG_DIR" "$HOME_DIR/.local/state/neo"
-# copy entrypoint
-cp -f neo.sh "$BIN_DIR/neo"
+mkdir -p "$INSTALL_BASE"
+mkdir -p "$BIN_DIR"
+
+# Copy package
+rsync -a --delete neo "$INSTALL_BASE"/
+
+# CLI launcher: run as module to fix relative imports
+cat > "$BIN_DIR/neo" <<'EOF'
+#!/usr/bin/env bash
+exec python3 -m neo "$@"
+EOF
 chmod +x "$BIN_DIR/neo"
 
-# copy python package to ~/.local/share/neo/neo
-PKG_DIR="$HOME_DIR/.local/share/neo"
-mkdir -p "$PKG_DIR"
-cp -R neo "$PKG_DIR/neo"
+# Backwards-compat symlink
+ln -sf "$BIN_DIR/neo" "$BIN_DIR/neo.sh" 2>/dev/null || true
 
-# create default config if missing
-CFG_FILE="$CFG_DIR/config.toml"
-if [ ! -f "$CFG_FILE" ]; then
-  cat > "$CFG_FILE" <<'EOF'
-# neo config (TOML)
-# You can toggle features here.
-color = true
-aur_auto_offer = true
-EOF
-fi
+echo "✅ Neo installed to $INSTALL_BASE"
+echo "✅ CLI wrapper installed to $BIN_DIR/neo"
 
-echo "[neo] Installed. Ensure ~/.local/bin is on PATH."
-echo "      Add to shell rc if needed: export PATH=\"$HOME/.local/bin:\$PATH\""
-echo "Run: neo -h"
+case ":$PATH:" in
+  *":$BIN_DIR:"*) hash -r 2>/dev/null || true ;;
+  *) echo "⚠ $BIN_DIR is not in PATH. Add: export PATH="$HOME/.local/bin:$PATH"" ;;
+esac
+
+echo "🎉 Installation complete! Run: neo sys-check"

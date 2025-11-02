@@ -1,148 +1,129 @@
-import os, sys, argparse
-from . import __version__
-from .loader import load_backends, load_config
-from .utils.pretty import ok, err, warn, info, big, celebrate
-from .utils.run import which, run, run_capture, require_network_tools
 
-def detect_active():
-    bks = load_backends()
-    active = [b for b in bks if b.available()]
-    return bks, active
+import argparse, os, shutil, sys
+from . import __version__, __codename__
+from .utils.pretty import info, ok, warn, err
+from .utils.update import self_update
+from .utils.uninstall import uninstall_self
+from .utils.sys_check import sys_check
+from .utils.run import run, run_capture
+from .utils.format import format_rows
 
-def prompt_setup_if_needed():
-    # Recommend setup if flatpak or flathub missing; prompt user
-    needs = []
-    if not which("flatpak"):
-        needs.append("flatpak")
+USER = os.environ.get('USER') or os.path.basename(os.path.expanduser('~'))
+
+def detect_backend():
+    if shutil.which('rpm-ostree'): return 'rpm-ostree'
+    if shutil.which('dnf5'): return 'dnf'
+    if shutil.which('pacman'): return 'pacman'
+    if shutil.which('apt'): return 'apt'
+    return None
+
+def cmd_search(args):
+    name = args.query
+    backend = detect_backend()
+    results = []
+    if backend in ('rpm-ostree','dnf'):
+        code, out = run_capture(['dnf5','search',name])
+        if code == 0:
+            for line in out.splitlines():
+                if not line or line.startswith(('Updating','Repositories','Matched','Name')): 
+                    continue
+                # Very rough parse
+                parts = line.split()
+                pkg = parts[0]
+                desc = ' '.join(parts[1:]) if len(parts)>1 else ''
+                results.append({'name': pkg, 'desc': desc})
+    if shutil.which('flatpak'):
+        code, out = run_capture(['flatpak','search',name])
+        if code == 0:
+            for ln in out.splitlines()[1:]:
+                cols = ln.split()
+                if cols:
+                    results.append({'name': cols[0], 'desc': '(flatpak)'})
+    if results:
+        for ln in format_rows(results):
+            print(ln)
+        ok('search complete')
     else:
-        rc, out = run_capture(["flatpak","remotes"])
-        if rc==0 and "flathub" not in out:
-            needs.append("flathub")
+        warn('no results (or backend unavailable)')
 
-    if needs:
-        warn("Full functionality not ready — setup recommended.")
-        ans = input("Run `neo setup` now? [Y/n] ").strip().lower()
-        if ans in ("", "y", "yes"):
-            do_setup(needs)
-        else:
-            info("OK — you can run `neo setup` later.")
+def cmd_list(args):
+    backend = detect_backend()
+    info('Installed (by backend):')
+    if backend == 'rpm-ostree':
+        print('--- rpm-ostree ---')
+        run(['rpm-ostree','status'])
+    if shutil.which('dnf5'):
+        print('--- dnf ---')
+        run(['dnf5','list','installed'])
+    if shutil.which('flatpak'):
+        print('--- flatpak ---')
+        run(['flatpak','list'])
 
-def do_setup(needs=None):
-    big("Preparing system…")
-    # Try to enable flatpak + flathub for all distros
-    if not which("flatpak"):
-        # Attempt install via common managers
-        if which("dnf") or which("dnf5"):
-            run([("dnf5" if which("dnf5") else "dnf"),"install","-y","flatpak"], use_sudo=True)
-        elif which("apt"):
-            run(["apt","update"], use_sudo=True)
-            run(["apt","install","-y","flatpak"], use_sudo=True)
-        elif which("pacman"):
-            run(["pacman","-Sy"], use_sudo=True)
-            run(["pacman","-S","--noconfirm","flatpak"], use_sudo=True)
-        else:
-            warn("No known system package manager detected for installing flatpak.")
-    if which("flatpak"):
-        rc,_ = run_capture(["flatpak","remotes"])
-        if rc==0:
-            run(["flatpak","remote-add","--if-not-exists","flathub","https://dl.flathub.org/repo/flathub.flatpakrepo"])
-        ok("Flatpak/Flathub ready")
-    ok("System prepared")
-
-def list_backends():
-    bks, active = detect_active()
-    names_active = {b.name for b in active}
-    print("Backends:")
-    for b in bks:
-        mark = "active" if b.name in names_active else "available" if b.available() else "inactive"
-        symbol = "✔" if mark=="active" else ("…" if mark=="available" else "✖")
-        print(f" {symbol} {b.name:12} {mark} (priority {b.priority})")
-
-def unified_list():
-    _, active = detect_active()
-    print("Installed (by backend):")
-    for b in active:
-        print(f"--- {b.name} ---")
-        res = b.list_installed()
-        if not res.ok:
-            warn(f"{b.name}: could not list installed items")
-
-def try_op(op, arg=None):
-    _, active = detect_active()
-    # prefer non-flatpak first
-    natives = [b for b in active if b.name!="flatpak"]
-    flat = [b for b in active if b.name=="flatpak"]
-    ordered = natives + flat
-
-    for b in ordered:
-        info(f"Trying {b.name}…")
-        fn = getattr(b, op)
-        res = fn(arg) if arg is not None else fn()
-        if res.ok:
-            ok(f"{op} via {b.name}")
-            return 0
-    err("no backend succeeded")
-    return 1
-
-def self_update():
-    big("Updating neo…")
-    tool = require_network_tools()
-    if not tool:
-        err("Need curl or wget installed to self-update.")
+def cmd_install(args):
+    pkg = args.name
+    backend = detect_backend()
+    tried=False
+    if backend in ('rpm-ostree','dnf'):
+        tried=True
+        run(['sudo','dnf5','install','-y',pkg])
+    if shutil.which('flatpak'):
+        run(['flatpak','install','-y',pkg])
+    if not tried:
+        err('no supported backend found')
         return 1
-    # Placeholder: this prints instructions. (Implement real URL later.)
-    print("Visit your GitHub release URL and download the latest zip, then run ./install.sh")
-    celebrate("neo self-update complete (placeholder)")
+    ok('install finished')
     return 0
 
-def entrypoint():
-    parser = argparse.ArgumentParser(prog="neo", description="Universal APT-style installer for any Linux distro")
-    parser.add_argument("-v","--version", action="store_true", help="show version and exit")
+def cmd_remove(args):
+    pkg = args.name
+    backend = detect_backend()
+    tried=False
+    if backend in ('rpm-ostree','dnf'):
+        tried=True
+        run(['sudo','dnf5','remove','-y',pkg])
+    if shutil.which('flatpak'):
+        run(['flatpak','uninstall','-y',pkg])
+    if not tried:
+        err('no supported backend found')
+        return 1
+    ok('remove finished')
+    return 0
 
-    sub = parser.add_subparsers(dest="cmd")
+def main(argv=None):
+    p = argparse.ArgumentParser(prog='neo')
+    p.add_argument('-v','--version', action='store_true', help='show version and exit')
+    sub = p.add_subparsers(dest='cmd')
+    sub.add_parser('self-update', help='update neo from GitHub release')
+    sub.add_parser('uninstall-self', help='remove neo from your user environment')
+    sub.add_parser('sys-check', help='system check (neofetch-style banner)')
+    ps = sub.add_parser('search', help='search packages/apps'); ps.add_argument('query')
+    pi = sub.add_parser('install', help='install a package/app'); pi.add_argument('name')
+    pr = sub.add_parser('remove', help='remove a package/app'); pr.add_argument('name')
+    sub.add_parser('list', help='list installed items (by backend)')
 
-    for c in ("install","remove","search","info"):
-        p = sub.add_parser(c, help=f"{c} a package")
-        p.add_argument("name", help="package name or app-id")
+    args = p.parse_args(argv)
 
-    sub.add_parser("update", help="update repository metadata")
-    sub.add_parser("upgrade", help="upgrade installed packages")
-    sub.add_parser("list", help="list installed packages across backends")
-    sub.add_parser("backend", help="list available backends").add_argument("action", nargs="?", default="list")
-    sub.add_parser("setup", help="prepare the system (Flatpak/Flathub etc.)")
-    sub.add_parser("self-update", help="update neo to the latest release")
-
-    if len(sys.argv)==1:
-        parser.print_help()
-        return 0
-    args = parser.parse_args()
     if args.version:
-        print(f"neo v{__version__}")
+        print(f'neo v{__version__} — {__codename__}')
         return 0
 
-    # gentle first-run prompt
-    if args.cmd not in ("setup","self-update","backend"):
-        prompt_setup_if_needed()
-
-    if args.cmd in ("install","remove","search","info"):
-        return try_op(args.cmd, args.name)
-    if args.cmd in ("update","upgrade"):
-        return try_op(args.cmd)
-    if args.cmd=="list":
-        unified_list()
+    if args.cmd is None:
+        # No args -> show banner + hint
+        from .utils.sys_check import banner
+        banner(__version__, __codename__, USER)
+        print('Try: neo sys-check')
         return 0
-    if args.cmd=="backend":
-        if args.action=="list":
-            list_backends()
-            return 0
-    if args.cmd=="setup":
-        do_setup()
-        return 0
-    if args.cmd=="self-update":
-        return self_update()
 
-    parser.print_help()
+    if args.cmd == 'self-update': return self_update()
+    if args.cmd == 'uninstall-self': return uninstall_self()
+    if args.cmd == 'sys-check': return sys_check(__version__, __codename__, USER)
+    if args.cmd == 'search': return cmd_search(args)
+    if args.cmd == 'install': return cmd_install(args)
+    if args.cmd == 'remove': return cmd_remove(args)
+    if args.cmd == 'list': return cmd_list(args)
+
+    p.print_help()
     return 0
 
-if __name__ == "__main__":
-    raise SystemExit(entrypoint())
+if __name__ == '__main__':
+    raise SystemExit(main())
