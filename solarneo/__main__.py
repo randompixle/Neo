@@ -7,29 +7,35 @@ from .utils.update import self_update
 
 USER = os.environ.get("USER") or getpass.getuser()
 
-# Debug logger
 def dbg(msg):
-    print(f"[DEBUG] {msg}")
+    if os.environ.get("SOLAR_DEBUG") == "1":
+        print(f"[DEBUG] {msg}")
 
-def detect_backend():
-    backends = []
-    if have("rpm-ostree"): backends.append("rpm-ostree")
-    if have("dnf5"): backends.append("dnf")
-    if have("pacman"): backends.append("pacman")
-    if have("apt"): backends.append("apt")
-    if have("flatpak"): backends.append("flatpak")
-    dbg(f"Detected backends: {', '.join(backends) if backends else 'NONE'}")
-    return backends
+def detect_backends():
+    backs = []
+    if have("rpm-ostree"): backs.append("rpm-ostree")
+    if have("dnf5"): backs.append("dnf")
+    if have("pacman"): backs.append("pacman")
+    if have("apt"): backs.append("apt")
+    if have("flatpak"): backs.append("flatpak")
+    dbg("Detected backends: " + (", ".join(backs) if backs else "NONE"))
+    return backs
+
+def auto_sudo(cmd):
+    dbg("Run: " + " ".join(cmd))
+    code = run(cmd)
+    if code != 0:
+        warn("Command failed; retrying with sudo…")
+        code = run(["sudo"] + cmd)
+    return code
 
 def cmd_sys(_):
-    dbg("System diagnostics triggered")
-    detect_backend()
+    detect_backends()
     sys_check(USER, __version__, __codename__)
     return 0
 
 def cmd_list(_):
-    dbg("Listing installed software from all available backends")
-    detect_backend()
+    detect_backends()
     info("Installed (by backend):")
     if have("rpm-ostree"):
         print("--- rpm-ostree ---")
@@ -42,17 +48,9 @@ def cmd_list(_):
         run(["flatpak","list"])
     return 0
 
-def auto_sudo(cmd: list):
-    dbg(f"Running command: {' '.join(cmd)}")
-    code = run(cmd)
-    if code != 0:
-        warn("Command failed, retrying with sudo…")
-        code = run(["sudo"] + cmd)
-    return code
-
 def cmd_search(a):
     q = a.query
-    dbg(f"Searching for: {q}")
+    detect_backends()
     shown = False
     if have("dnf5"):
         code, out = capture(["dnf5","search",q])
@@ -66,15 +64,14 @@ def cmd_search(a):
 
 def cmd_install(a):
     name = a.name
-    dbg(f"Requested install: {name}")
-    detect_backend()
+    detect_backends()
     tried = False
+    # Prefer dnf if available (may fail on read-only)
     if have("dnf5"):
-        dbg("Trying DNF backend")
         tried = True
         auto_sudo(["dnf5","install","-y",name])
+    # Flatpak
     if have("flatpak"):
-        dbg("Trying Flatpak fallback")
         if "." in name:
             auto_sudo(["flatpak","install","-y",name])
         else:
@@ -87,44 +84,46 @@ def cmd_install(a):
 
 def cmd_remove(a):
     name = a.name
-    dbg(f"Requested removal: {name}")
-    detect_backend()
+    detect_backends()
     tried = False
-    if have("dnf5"):
-        dbg("Trying DNF removal")
+    if have("dnf5") and not have("rpm-ostree"):
         tried = True
         auto_sudo(["dnf5","remove","-y",name])
     if have("flatpak"):
-        dbg("Trying Flatpak removal")
         if "." in name:
             auto_sudo(["flatpak","uninstall","-y",name])
+        run(["flatpak","remove","--unused","-y"])
     if not tried and not have("flatpak"):
         err("No supported backend found")
         return 1
     ok("Uninstall completed")
     return 0
 
-def cmd_self_update(_):
-    dbg("Self-update triggered")
-    return self_update()
+def cmd_self_update(a):
+    force = bool(getattr(a, "force", False))
+    return self_update(force=force)
 
 def cmd_uninstall_self(_):
-    dbg("Removing Solar Neo user installation")
     paths = [
-        os.path.expanduser("~/.local/share/solar-neo"),
-        os.path.expanduser("~/.config/solar-neo"),
-        os.path.expanduser("~/.cache/solar-neo"),
+        os.path.expanduser("~/.local/share/solarneo"),
+        os.path.expanduser("~/.config/solarneo"),
+        os.path.expanduser("~/.cache/solarneo"),
         os.path.expanduser("~/.local/bin/solar"),
+        "/usr/local/share/solarneo",
+        "/usr/local/bin/solar",
     ]
     for p in paths:
-        dbg(f"Removing: {p}")
+        dbg("Removing: " + p)
         if os.path.isdir(p):
-            shutil.rmtree(p, ignore_errors=True)
+            try:
+                shutil.rmtree(p, ignore_errors=True)
+            except Exception:
+                pass
         elif os.path.isfile(p):
             try: os.remove(p)
             except OSError: pass
     ok("Solar Neo removed")
-    warn("Run `hash -r` or reopen shell")
+    warn("Run `hash -r` or open a new shell to refresh PATH.")
     return 0
 
 def main(argv=None):
@@ -133,27 +132,24 @@ def main(argv=None):
 
     sub = ap.add_subparsers(dest="cmd")
     sub.add_parser("sys", help="system diagnostics")
-    sub.add_parser("list", help="list installed software")
-    ps = sub.add_parser("search", help="search apps"); ps.add_argument("query")
-    pi = sub.add_parser("install", help="install a package"); pi.add_argument("name")
-    pr = sub.add_parser("remove", help="remove a package"); pr.add_argument("name")
-    sub.add_parser("self-update", help="update Solar Neo")
-    sub.add_parser("uninstall-self", help="remove Solar Neo")
+    sub.add_parser("list", help="list installed items")
+    ps = sub.add_parser("search", help="search packages/apps"); ps.add_argument("query")
+    pi = sub.add_parser("install", help="install a package/app"); pi.add_argument("name")
+    pr = sub.add_parser("remove", help="remove a package/app"); pr.add_argument("name")
+    pu = sub.add_parser("self-update", help="update Solar Neo from GitHub")
+    pu.add_argument("--force", action="store_true", help="force update/downgrade even if remote is older")
+    sub.add_parser("uninstall-self", help="remove Solar Neo from your user environment")
 
     args = ap.parse_args(argv)
 
     if args.version:
-        print(f"{__product__} v{__version__} — {__codename__}")
+        print(f"{__product__} {__version__} — {__codename__}")
         return 0
 
     if args.cmd is None:
-        header(f"{__product__} — v{__version__}",
-               f"PROJECT: {__codename__}",
-               by=USER)
+        header(f"{__product__} — {__version__}", f"PROJECT: {__codename__}", by=USER)
         print("Try: solar sys")
         return 0
-
-    dbg(f"Command: {args.cmd}")
 
     if args.cmd == "sys": return cmd_sys(args)
     if args.cmd == "list": return cmd_list(args)

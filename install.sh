@@ -1,25 +1,47 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PREFIX="${HOME}/.local"
-BIN_DIR="${PREFIX}/bin"
-SHARE_DIR="${HOME}/.local/share/solar-neo"
+VER="$(cat ./version.txt 2>/dev/null || echo 'v0.6')"
+USR_PREFIX="${HOME}/.local"
+USR_BIN="${USR_PREFIX}/bin"
+USR_SHARE="${HOME}/.local/share/solarneo"
 
-echo "Installing Solar Neo v0.5.0 — PROJECT: SOLAR"
+SYS_PREFIX="/usr/local"
+SYS_BIN="${SYS_PREFIX}/bin"
+SYS_SHARE="${SYS_PREFIX}/share/solarneo"
 
-mkdir -p "${BIN_DIR}"
-mkdir -p "${SHARE_DIR}"
+install_to_prefix () {
+  local BIN_DIR="$1"
+  local SHARE_DIR="$2"
 
-# Copy package
-rsync -a ./solarneo/ "${SHARE_DIR}/solarneo/"
-# Copy version + docs
-install -m 0644 version.txt "${SHARE_DIR}/version.txt" || true
-install -m 0644 CHANGELOG.md "${SHARE_DIR}/CHANGELOG.md" || true
-install -m 0644 README.md "${SHARE_DIR}/README.md" || true
+  mkdir -p "${BIN_DIR}"
+  mkdir -p "${SHARE_DIR}"
 
-# Install wrapper
-install -m 0755 ./bin/solar "${BIN_DIR}/solar"
+  rsync -a ./solarneo/ "${SHARE_DIR}/solarneo/"
+  install -m 0755 ./solar "${BIN_DIR}/solar"
+  install -m 0644 ./CHANGELOG.md "${SHARE_DIR}/CHANGELOG.md" || true
+  install -m 0644 ./README.md "${SHARE_DIR}/README.md" || true
+  echo "${VER}" > "${SHARE_DIR}/version.txt"
+}
 
-echo "✅ Installed to ${SHARE_DIR}"
-echo "✅ CLI available: ${BIN_DIR}/solar"
-echo "🎉 Try: solar sys"
+echo "Installing Solar Neo ${VER} — PROJECT: SOLAR"
+
+# Try user-local first
+if install_to_prefix "${USR_BIN}" "${USR_SHARE}" 2>/dev/null; then
+  echo "✅ Solar Neo installed — ${VER}"
+  echo "PROJECT: SOLAR ☀"
+  echo "Try: solar sys"
+  exit 0
+fi
+
+# If permissions blocked, auto escalate
+echo "⚠ Local install failed, attempting system-wide via sudo…"
+if sudo bash -c "$(declare -f install_to_prefix); install_to_prefix '${SYS_BIN}' '${SYS_SHARE}'"; then
+  echo "✅ Solar Neo installed — ${VER} (system-wide)"
+  echo "PROJECT: SOLAR ☀"
+  echo "Try: solar sys"
+  exit 0
+fi
+
+echo "✖ Installation failed" >&2
+exit 1

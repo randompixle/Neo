@@ -1,36 +1,29 @@
-# Solar neo — Universal APT-Style Package Installer for Every Linux Distro
+# Solar Neo — v0.6 (Project: Solar)
 
-**Sola Neo** lets you use APT-style commands on distros that **don’t use apt**  
-(Bazzite / Fedora rpm-ostree, Arch, etc.) — *no extra setup needed.*
+**CLI:** `solar`
 
-Auto-detects your system backend  
-Automatically uses sudo when needed  
-Flatpak fallback when system package missing  
-Supports AUR if installed (yay/paru)  
-Unified installed app listing (system + flatpak)
+## Quick Install
+```bash
+unzip Solar-Neo-v0.6.zip
+cd Solar-Neo-0.6
+bash ./install.sh
+hash -r
+solar sys
+```
 
-> Just type `solar install <package>`
+## Commands
+```bash
+solar sys
+solar list
+solar search vlc
+solar install org.videolan.VLC
+solar remove org.videolan.VLC
+solar self-update           # checks GitHub Releases first
+solar self-update --force   # reinstall / downgrade even if older
+solar uninstall-self
+```
 
----
-
-##  Features/Documentation
-
-- Cross-distro support:
-  - **rpm-ostree** (Bazzite, Silverblue)
-  - **DNF / DNF5** (Fedora)
-  - **Pacman** (Arch-based)
-  - **APT** (Debian/Ubuntu)
-  - **Flatpak** (fallback)
-  - **AUR** helper if available
-- Commands:
-  ```bash
-  solar install <pkg>
-  solar remove <pkg>
-  soalr search <pkg>
-  solar info <pkg>
-  solar list
-  solar update
-  solar upgrade
-  solar backend list
-  solar setup
-  solar self-update
+## Notes
+- On rpm-ostree systems (Bazzite/Silverblue/etc), Solar prefers Flatpak for apps.
+- Self-update pulls from `randompixle/Solar-Neo` Releases; falls back to main.zip if no asset.
+- Logs rotate under `~/.local/share/solarneo/logs/`.

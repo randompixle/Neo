@@ -1,4 +1,3 @@
-
 import subprocess, shutil
 
 def have(cmd): return shutil.which(cmd) is not None

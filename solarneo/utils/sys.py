@@ -1,9 +1,8 @@
-
-import os, shutil, platform
-from .pretty import header, ok, warn
+import platform, shutil
+from .pretty import header, ok
 
 def sys_check(user, version, codename):
-    header(f"Solar Neo — v{version}", f"PROJECT: {codename} ☀️", by=user)
+    header(f"Solar Neo — {version}", f"PROJECT: {codename}", by=user)
     have = shutil.which
     print("Backends:")
     print(f"  rpm-ostree : {'yes' if have('rpm-ostree') else 'no'}")
