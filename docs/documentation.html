@@ -32,8 +32,49 @@
       <section id="installation" class="section">
         <h3>Installation</h3>
         <p>Download the latest bundle and run the install script with elevated privileges:</p>
-        <pre><code>curl -L https://randompixle.github.io/Solar-Neo/Versions/Solar-Neo-v0.7.0/Release.zip -o solar-neo.zip
-unzip solar-neo.zip -d Solar-Neo
+        <pre><code>LATEST_URL=$(python3 - <<'PY'
+import json
+import urllib.request
+
+INDEX_URL = "https://randompixle.github.io/Solar-Neo/Versions/Version_Index.json"
+
+def version_key(raw):
+    parts = []
+    for piece in str(raw or "0").split('.'):
+        if piece.isdigit():
+            parts.append(int(piece))
+        else:
+            parts.append(piece)
+    return parts
+
+with urllib.request.urlopen(INDEX_URL) as response:
+    payload = json.load(response)
+
+releases = [entry for entry in payload.get("versions", []) if entry.get("files") or entry.get("folder")]
+if not releases:
+    raise SystemExit("No releases found in Version_Index.json")
+
+releases.sort(key=lambda entry: version_key(entry.get("version")), reverse=True)
+latest = releases[0]
+
+archive_path = None
+for candidate in latest.get("files", []):
+    if candidate.get("name", "").lower() == "release.zip":
+        archive_path = candidate.get("path")
+        break
+
+if not archive_path:
+    folder = latest.get("folder")
+    if not folder:
+        raise SystemExit("Latest version is missing a Release.zip entry")
+    archive_path = f"{folder}/Release.zip"
+
+print(f"https://randompixle.github.io/Solar-Neo/Versions/{archive_path}")
+PY
+)
+
+curl -L "$LATEST_URL" -o solar-neo.zip
+unzip -o solar-neo.zip -d Solar-Neo
 cd Solar-Neo/Release
 sudo ./install.sh</code></pre>
         <p>Confirm the installation:</p>
