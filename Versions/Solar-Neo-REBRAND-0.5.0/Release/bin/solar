@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Ensure our package path is importable
+export PYTHONPATH="${HOME}/.local/share/solar-neo:${PYTHONPATH:-}"
+exec python3 -m solarneo "$@"

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Prefer user-local install; fallback to system path
+if [ -d "${HOME}/.local/share/solarneo" ]; then
+  export PYTHONPATH="${HOME}/.local/share/solarneo:${PYTHONPATH:-}"
+elif [ -d "/usr/local/share/solarneo" ]; then
+  export PYTHONPATH="/usr/local/share/solarneo:${PYTHONPATH:-}"
+fi
+exec python3 -m solarneo "$@"
