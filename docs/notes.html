@@ -1,22 +1,15 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Solar Neo — Notes</title>
-<link rel="stylesheet" href="./assets/css/style.css"></head><body>
-<div class="container">
-  <div class="header">
-    <div class="header-brand">
-      <div class="logo"></div><div class="title">Solar Neo <span class="badge">Notes</span></div>
-    </div>
-    <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
-    <button class="btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" class="header-nav" data-nav>
-      <a class="btn" href="../index.HTML">Site home</a>
-      <a class="btn" href="./index.html">Docs portal</a>
-      <a class="btn" href="./documentation.html">Documentation</a>
-      <a class="btn" href="./versions.html">Release history</a>
-      <a class="btn" href="./latest.html">Latest download</a>
-      <a class="btn" href="./notes.html" aria-current="page">Notes</a>
-    </nav>
+<link rel="stylesheet" href="./assets/css/style.css">
+<script defer src="./assets/js/notes.js"></script>
+</head><body>
+<div class="nav container">
+  <div class="brand">Solar Neo <span class="tag">Notes</span></div>
+  <div class="nav-links">
+    <a href="../index.HTML">Home</a>
+    <a href="./versions.html">Versions</a>
+    <a href="./notes.html">Notes</a>
   </div>
 
   <section class="panel">
@@ -51,10 +44,9 @@
   <div class="footer">© Solar Neo — Notes</div>
 </div>
 <script type="module">
-import {initNavigation, initTheme} from './assets/js/common.js';
+import {initTheme} from './assets/js/common.js';
 import initNotesPage from './assets/js/notes.js';
 initTheme();
-initNavigation();
 initNotesPage();
 </script>
 </body></html>
