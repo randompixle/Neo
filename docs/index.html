@@ -1,57 +1,101 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Solar Neo</title>
-<link rel="stylesheet" href="./docs/assets/css/style.css">
-<style>
-  body{background:radial-gradient(1400px 700px at 15% -10%, rgba(179,136,255,.12), transparent),
-       radial-gradient(900px 500px at 85% 120%, rgba(255,204,0,.08), transparent), var(--bg);}
-  .hero{margin-top:48px}
-</style>
-</head><body>
+<title>Solar Neo — Docs Portal</title>
+<link rel="stylesheet" href="./assets/css/style.css"></head><body>
 <div class="container">
   <div class="header">
-    <div class="logo"></div><div class="title">Solar Neo <span class="badge">Platform</span></div>
+    <div class="logo"></div><div class="title">Solar Neo <span class="badge" data-role="version-badge" data-template="{version} docs" data-fallback="Docs">Docs</span></div>
     <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
-    <a class="btn" href="./docs/index.html">Docs Portal</a>
-    <a class="btn" href="./docs/latest.html">Latest Release</a>
-    <a class="btn" href="https://github.com/RandomPixle/Solar-Neo" target="_blank" rel="noopener">GitHub</a>
+    <a class="btn" href="./index.html">Home</a>
+    <a class="btn" href="./documentation.html">Documentation</a>
+    <a class="btn" href="./versions.html">Release history</a>
+    <a class="btn" href="./latest.html" data-role="download-latest" data-label-template="Download {version}" data-fallback="Download latest release">Latest download</a>
+    <a class="btn" href="./notes.html">Notes</a>
   </div>
 
   <section class="hero">
-    <div class="hero-title">Solar Neo is the package manager built for fast installs.</div>
-    <p class="hero-lead">Ship Fedora and Flatpak workloads with a single, trusted workflow—no hundred-word copy and paste required. Solar Neo automates the boring parts so you can deliver dependable workstations at scale.</p>
+    <div class="hero-title">Package management without the marathon commands.</div>
+    <p class="hero-lead">Solar Neo wraps DNF5 and Flatpak delivery into a single, predictable workflow. Automate installs, pin releases, and surface audit trails with tooling that favours one-line setup.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="./docs/latest.html" data-role="download-latest" data-label-template="Download {version}" data-fallback="Download latest release">Download latest release</a>
-      <a class="btn" href="./docs/documentation.html">Product documentation</a>
-      <a class="btn" href="./docs/versions.html">Release history</a>
+      <a class="btn btn-primary" href="./documentation.html">Read the docs</a>
+      <a class="btn" href="./versions.html">Browse versions</a>
+      <a class="btn" href="https://github.com/RandomPixle/Solar-Neo" target="_blank" rel="noopener">View on GitHub</a>
+    </div>
+    <div class="subtle" data-role="version-message" data-prefix="Serving " data-suffix=" — compatible with Fedora 39+ workstations and Flatpak-enabled hosts." data-fallback="Serving latest release — compatible with Fedora 39+ workstations and Flatpak-enabled hosts.">Serving latest release — compatible with Fedora 39+ workstations and Flatpak-enabled hosts.</div>
+  </section>
+
+  <section class="section">
+    <h3>What you get</h3>
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">Unified backend control</div>
+        <div class="card-sub">Use one CLI to coordinate both DNF5 repositories and Flatpak remotes without switching contexts.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Release insights</div>
+        <div class="card-sub">Check hashes, compare manifests, and quickly locate fixes from our curated version history.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Safe automation</div>
+        <div class="card-sub">Scriptable installs, rollbacks, and environment health checks keep your deployment pipeline dependable.</div>
+      </div>
     </div>
   </section>
 
   <section class="section panel">
-    <h3>Highlights</h3>
-    <div class="grid">
-      <div class="card">
-        <div class="card-title">Fleet-ready workflows</div>
-        <div class="card-sub">Publish consistent baselines, bundle post-install tasks, and keep endpoints aligned with policy.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Transparent releases</div>
-        <div class="card-sub">Every build ships with checksums, metadata, and audit details so you can trust what you deploy.</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Operator ergonomics</div>
-        <div class="card-sub">Human-friendly CLI with JSON output for automation lets you switch between terminal and pipelines effortlessly.</div>
-      </div>
-    </div>
+    <h3>Quick start</h3>
+    <p class="muted">Install the CLI on a fresh host in minutes.</p>
+    <pre><code>LATEST_URL=$(python3 - <<'PY'
+import json
+import urllib.request
+
+INDEX_URL = "https://randompixle.github.io/Solar-Neo/Versions/Version_Index.json"
+
+def version_key(raw):
+    parts = []
+    for piece in (raw or "0").split('.'):
+        try:
+            parts.append(int(piece))
+        except ValueError:
+            parts.append(piece)
+    return parts
+
+with urllib.request.urlopen(INDEX_URL) as response:
+    data = json.load(response)
+
+versions = [entry for entry in data.get("versions", []) if entry.get("files")]
+if not versions:
+    raise SystemExit("No releases found in Version_Index.json")
+
+versions.sort(key=lambda entry: version_key(entry.get("version")), reverse=True)
+latest = versions[0]
+
+release_file = None
+for candidate in latest.get("files", []):
+    if candidate.get("name", "").lower() == "release.zip":
+        release_file = candidate.get("path")
+        break
+if release_file is None:
+    release_file = latest["files"][0]["path"]
+
+print(f"https://randompixle.github.io/Solar-Neo/Versions/{release_file}")
+PY
+)
+
+curl -L "$LATEST_URL" -o solar-neo.zip
+unzip -o solar-neo.zip -d Solar-Neo
+cd Solar-Neo/Release
+./install.sh
+solar --version</code></pre>
+    <div class="hr"></div>
+    <p>Looking for older builds? Browse the <a href="./versions.html">full release catalog</a> or jump directly to the <a href="./latest.html">latest stable bundle</a>.</p>
   </section>
 
-  <section class="section">
-    <div class="callout">
-      Want to contribute? Open a pull request or share feedback in the <a href="https://github.com/RandomPixle/Solar-Neo/discussions" target="_blank" rel="noopener">project discussions</a>.
-    </div>
-  </section>
+  <div class="section callout">
+    <strong>New to Solar Neo?</strong> Our refreshed <a href="./documentation.html">documentation</a> covers workflows, environment setup, and troubleshooting tips.
+  </div>
 
-  <div class="footer">© Solar Neo — Crafted for the Fedora community</div>
+  <div class="footer">© Solar Neo — GitHub Pages</div>
 </div>
-<script type="module" src="./docs/assets/js/site.js"></script>
+<script type="module" src="./assets/js/site.js"></script>
 </body></html>
