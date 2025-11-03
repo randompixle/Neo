@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solar Neo</title>
+<link rel="stylesheet" href="./assets/css/style.css">
+</head><body>
+
+<div class="nav container">
+  <div class="brand">Solar Neo <span class="tag">Website</span></div>
+  <div style="margin-left:auto;display:flex;gap:16px">
+    <a href="./index.html">Home</a>
+    <a href="./versions.html">Versions</a>
+    <a href="./notes.html">Notes</a>
+  </div>
+</div>
+
+<main class="container">
+  <h1>Solar Neo</h1>
+  <div class="card">
+    <p>Unified package workflow for immutable and hybrid Linux systems. This site hosts public notes and archived releases.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a class="button" href="https://github.com/randompixle/Solar-Neo/releases">Get Latest Release</a>
+      <a class="button" href="./versions.html">Browse Versions</a>
+      <a class="button" href="./notes.html">View Notes</a>
+    </div>
+  </div>
+  <h2>How public notes work</h2>
+  <div class="card">
+    <ul>
+      <li>Notes are public and stored in this repository under <span class="mono">/notes/notes.json</span>.</li>
+      <li>Solar Neo can fetch notes directly from the site.</li>
+      <li>Users who wish to publish notes must authenticate with GitHub (per-user token).</li>
+    </ul>
+  </div>
+  <h2>Repository layout</h2>
+  <div class="card mono small">/docs — GitHub Pages site (this)
+/notes/notes.json — Public note store
+/Versions/ — Archived releases</div>
+  <div class="footer">© Solar Neo. Public data may be mirrored by forks and archives.</div>
+</main>
+</body></html>
