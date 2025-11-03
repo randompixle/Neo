@@ -76,6 +76,7 @@ export default function initNotesPage(){
     const pkg=(pkgInput?.value||'').trim();
     const note=(noteInput?.value||'').trim();
     const password=(passwordInput?.value||'').trim();
+    const password=(document.getElementById('password')?.value||'').trim();
     if(!password){ setStatus(msg,'err','Password is required.'); return; }
     if(!pkg||!note){ setStatus(msg,'err','Package and note are required.'); return; }
     if(submitBtn){

@@ -1,93 +1,29 @@
-<!doctype html><html lang="en"><head>
+<!doctype html><html><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Solar Neo — Notes</title>
-<link rel="stylesheet" href="./assets/css/style.css">
-</head><body>
+<title>Solar Neo — Home</title>
+<link rel="stylesheet" href="./assets/css/style.css"></head><body>
 <div class="container">
-  <header class="header">
-    <div class="header-brand">
-      <div class="logo"></div>
-      <div class="title">Solar Neo <span class="badge" data-role="version-badge" data-template="{version} notes" data-fallback="Notes">Notes</span></div>
-    </div>
+  <div class="header">
+    <div class="logo"></div><div class="title">Solar Neo <span class="badge">v0.8.0 Site</span></div>
     <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
-    <nav class="header-nav">
-      <a class="btn" href="../index.HTML">Site home</a>
-      <a class="btn" href="./index.html">Docs portal</a>
-      <a class="btn" href="./documentation.html">Documentation</a>
-      <a class="btn" href="./versions.html">Release history</a>
-      <a class="btn" href="./latest.html" data-role="download-latest" data-label-template="Download {version}" data-fallback="Latest download">Latest download</a>
-      <a class="btn" href="./notes.html" aria-current="page">Notes</a>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <div class="hero-title">Track what shipped, why it mattered, and who should follow up.</div>
-    <p class="hero-lead">Use the notes log to capture release outcomes, QA results, or reminders to revisit next week. Entries live in the repository alongside the Solar Neo builds so the whole team can review the timeline.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#create-note">Write a note</a>
-      <a class="btn" href="#note-log">Browse the log</a>
-      <a class="btn" href="https://github.com/RandomPixle/Solar-Neo/tree/main/notes" target="_blank" rel="noopener">Repository folder</a>
-    </div>
-    <div class="subtle" data-role="version-message" data-prefix="Notes synced with " data-suffix=" releases." data-fallback="Notes synced with latest releases.">Notes synced with latest releases.</div>
-  </section>
-
-  <section class="section panel notes-intro">
-    <div class="grid two">
-      <div>
-        <h2>How it works</h2>
-        <p>The interface calls a small CGI helper on the docs server. Notes are appended to <code class="mono">notes/notes.json</code> using the shared password so you do not need a GitHub login.</p>
-        <ul class="list-spaced">
-          <li>Keep entries short—bullets render exactly as plain text in the log.</li>
-          <li>Avoid private data. Everything you publish is visible to the community.</li>
-          <li>Rotate the password often by setting <code class="mono">SOLAR_NOTES_PASSWORD</code> when hosting locally.</li>
-        </ul>
-      </div>
-      <div class="callout">
-        <strong>Quick tip:</strong> The default password is <code class="mono">Supersecrectcode1!</code>. Set <code class="mono">SOLAR_NOTES_PASSWORD</code> in your environment to change it when serving with <code class="mono">python -m http.server --cgi</code>.
-      </div>
-    </div>
-  </section>
-
-  <section class="section notes-columns">
-    <div id="create-note" class="panel notes-compose">
-      <h2>Publish a note</h2>
-      <p class="small muted">Notes publish instantly once the shared password is validated, so double-check each entry before sending.</p>
-      <div class="notes-form" data-notes-form>
-        <label for="password">Notes password</label>
-        <input id="password" class="input input-full" type="password" placeholder="Enter the shared code" autocomplete="current-password">
-        <label for="pkg">Package name</label>
-        <input id="pkg" class="input input-full" placeholder="e.g., solar-cli" autocomplete="off">
-        <label for="note">Note</label>
-        <textarea id="note" rows="4" class="input input-full input-area" placeholder="Summarize the outcome or next step."></textarea>
-        <div class="notes-warning" role="alert">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 5l9 16H3l9-16z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 10v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="17.5" r="1" fill="currentColor"/></svg>
-          <p>Keep the password secret and avoid sensitive information; entries commit to <code class="mono">notes/notes.json</code>.</p>
-        </div>
-        <button id="submit" class="btn btn-primary" type="button">Submit note</button>
-        <div id="msg" class="status small" role="status" aria-live="polite"></div>
-      </div>
-      <p class="small muted">The default password is <code class="mono">Supersecrectcode1!</code>. Change it by setting <code class="mono">SOLAR_NOTES_PASSWORD</code> before starting the server.</p>
-    </div>
-
-    <div id="note-log" class="panel notes-browser">
-      <div class="notes-browser-head">
-        <div>
-          <h2>Browse notes</h2>
-          <p class="small muted">Refresh to pull the latest entries from <code class="mono">notes/notes.json</code>.</p>
-        </div>
-        <button class="btn btn-ghost" type="button" data-notes-refresh>Refresh</button>
-      </div>
-      <div id="notes" class="notes-list" data-notes role="list" aria-live="polite" aria-busy="true">
-        <div class="notes-placeholder">Loading notes…</div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">© Solar Neo — Notes</footer>
+    <a class="btn" href="./versions.html">Versions</a>
+    <a class="btn" href="./latest.html">Latest</a>
+  </div>
+  <div class="panel">
+    <h2>Welcome to Solar Neo</h2>
+    <p>Multi-backend helper (dnf5/Flatpak). Releases are hosted outside <code>/docs</code> under <code>/Versions</code>.</p>
+    <div class="hr"></div>
+    <h3>Install (CLI)</h3>
+    <pre><code>curl -L https://randompixle.github.io/Solar-Neo/Versions/Solar-Neo-v0.7.0/Release.zip -o solar-neo.zip
+unzip solar-neo.zip -d Solar-Neo
+cd Solar-Neo/Release
+./install.sh
+solar --version</code></pre>
+    <div class="hr"></div>
+    <p>See <a href="./versions.html">all versions</a> or jump to the <a href="./latest.html">latest</a>.</p>
+  </div>
+  <div class="footer">© Solar Neo — GitHub Pages</div>
 </div>
-<script type="module" src="./assets/js/site.js"></script>
-<script type="module">
-import initNotesPage from './assets/js/notes.js';
-initNotesPage();
-</script>
+<script type="module" src="./assets/js/common.js"></script>
+<script type="module">import {initTheme} from './assets/js/common.js'; initTheme();</script>
 </body></html>
