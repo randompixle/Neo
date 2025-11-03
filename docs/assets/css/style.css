@@ -21,6 +21,8 @@ a{color:var(--accent)}
 .toolbar{display:flex; gap:12px; align-items:center; margin:10px 0 22px}
 .btn{padding:8px 12px; background:linear-gradient(180deg, #1b2344,#121a33); border:1px solid var(--border); color:var(--text); border-radius:10px; cursor:pointer; transition:.15s transform, .2s box-shadow;}
 .btn:hover{transform:translateY(-1px); box-shadow:0 6px 22px rgba(179,136,255,.15)}
+.btn[aria-current="page"]{border-color:rgba(179,136,255,.55); box-shadow:0 0 0 1px rgba(179,136,255,.35); cursor:default}
+.btn[aria-current="page"]:hover{transform:none; box-shadow:0 0 0 1px rgba(179,136,255,.35)}
 .btn-primary{border-color:rgba(179,136,255,.5); background:linear-gradient(180deg, #2a2d56,#191e3a)}
 .input{padding:10px 12px; background:#0e1530; border:1px solid var(--border); color:var(--text); border-radius:10px; min-width:260px}
 .button{display:inline-flex; justify-content:center; align-items:center; gap:8px; padding:10px 14px; background:linear-gradient(180deg, #1b2344,#121a33); border:1px solid var(--border); color:var(--text); border-radius:10px; cursor:pointer; transition:.15s transform, .2s box-shadow;}
