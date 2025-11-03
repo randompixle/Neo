@@ -71,6 +71,7 @@ pre{white-space:pre-wrap; background:#0e1530; padding:12px; border-radius:10px; 
   .header{flex-wrap:wrap;}
   .theme-toggle{margin-left:0;}
   .hero{padding:28px;}
+  .notes-form .btn{width:100%;}
 }
 
 @media (max-width: 840px){
