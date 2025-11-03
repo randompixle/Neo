@@ -3,12 +3,36 @@
 <title>Solar Neo — Latest</title>
 <link rel="stylesheet" href="./assets/css/style.css">
 <script type="module">
-import {BASE,getJSON} from './assets/js/common.js';
+import {BASE,getJSON,initTheme} from './assets/js/common.js';
+initTheme();
 (async ()=>{
-  try{ const d=await getJSON(`${BASE}/Versions/Version_Index.json`); const all=(d.versions||[]).sort((a,b)=>(b.version||'').localeCompare(a.version||'')); const latest=all[0]; if(latest) location.href=`./version.html?v=${encodeURIComponent(latest.version)}`; else document.body.innerHTML='<div class=container><div class=panel>No versions in index.</div></div>'; }
-  catch(e){ document.body.innerHTML='<div class=container><div class=panel>Failed to fetch Version_Index.json</div></div>'; }
+  try{
+    const d=await getJSON(`${BASE}/Versions/Version_Index.json`);
+    const all=(d.versions||[]).sort((a,b)=>(b.version||'').localeCompare(a.version||''));
+    const latest=all[0];
+    if(latest){
+      location.href=`./version.html?v=${encodeURIComponent(latest.version)}`;
+    }else{
+      document.body.innerHTML='<div class="container"><div class="panel">No versions in index.</div></div>';
+    }
+  }
+  catch(e){
+    document.body.innerHTML='<div class="container"><div class="panel">Failed to fetch Version_Index.json</div></div>';
+  }
 })();
 </script>
 </head><body>
-  <div class="container"><div class="header"><div class="logo"></div><div class="title">Solar Neo</div></div><div class="panel">Loading latest…</div></div>
+  <div class="container">
+    <div class="header">
+      <div class="logo"></div><div class="title">Solar Neo <span class="badge">Latest</span></div>
+      <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
+      <a class="btn" href="../index.HTML">Site home</a>
+      <a class="btn" href="./index.html">Docs portal</a>
+      <a class="btn" href="./documentation.html">Documentation</a>
+      <a class="btn" href="./versions.html">Release history</a>
+      <a class="btn" href="./latest.html" aria-current="page">Latest download</a>
+      <a class="btn" href="./notes.html">Notes</a>
+    </div>
+    <div class="panel">Loading latest…</div>
+  </div>
 </body></html>
