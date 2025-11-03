@@ -1,0 +1,13 @@
+{
+  "versions": [
+    {
+      "name": "Solar Neo v0.7.0",
+      "version": "0.7.0",
+      "folder": "Solar-Neo-v0.7.0",
+      "date": "2025-11-02",
+      "channel": "stable",
+      "sha256": "(fill after uploading real ZIP)",
+      "codename": "SOLAR"
+    }
+  ]
+}

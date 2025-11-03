@@ -1,0 +1,6 @@
+export const BASE = "..";
+export async function getJSON(path){ const r = await fetch(path,{cache:'no-store'}); if(!r.ok) throw new Error(`fetch ${path} ${r.status}`); return r.json(); }
+export function h(tag, attrs={}, children=[]){ const el=document.createElement(tag); for(const [k,v] of Object.entries(attrs)){ if(k==='class') el.className=v; else el.setAttribute(k,v);} ([]).concat(children).forEach(c=>el.append(c instanceof Node?c:document.createTextNode(c))); return el; }
+export function setTheme(t){ document.documentElement.dataset.theme=t; localStorage.setItem('solar-theme',t); }
+export function initTheme(){ const t=localStorage.getItem('solar-theme')||'mixed'; setTheme(t); const b=document.getElementById('theme-btn'); if(b){ b.textContent = `Theme: ${t}`; b.addEventListener('click',()=>{ const cur=localStorage.getItem('solar-theme')||'mixed'; const next= cur==='mixed'?'purple': cur==='purple'?'dark':'mixed'; setTheme(next); b.textContent=`Theme: ${next}`; }); } }
+export async function sha256hex(buf){ const d=await crypto.subtle.digest('SHA-256',buf); return Array.from(new Uint8Array(d)).map(b=>b.toString(16).padStart(2,'0')).join(''); }

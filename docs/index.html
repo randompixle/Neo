@@ -1,41 +1,29 @@
-<!doctype html>
-<html lang="en"><head>
+<!doctype html><html><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Solar Neo</title>
-<link rel="stylesheet" href="./assets/css/style.css">
-</head><body>
-
-<div class="nav container">
-  <div class="brand">Solar Neo <span class="tag">Website</span></div>
-  <div style="margin-left:auto;display:flex;gap:16px">
-    <a href="./index.html">Home</a>
-    <a href="./versions.html">Versions</a>
-    <a href="./notes.html">Notes</a>
+<title>Solar Neo — Home</title>
+<link rel="stylesheet" href="./assets/css/style.css"></head><body>
+<div class="container">
+  <div class="header">
+    <div class="logo"></div><div class="title">Solar Neo <span class="badge">v0.8.0 Site</span></div>
+    <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
+    <a class="btn" href="./versions.html">Versions</a>
+    <a class="btn" href="./latest.html">Latest</a>
   </div>
+  <div class="panel">
+    <h2>Welcome to Solar Neo</h2>
+    <p>Multi-backend helper (dnf5/Flatpak). Releases are hosted outside <code>/docs</code> under <code>/Versions</code>.</p>
+    <div class="hr"></div>
+    <h3>Install (CLI)</h3>
+    <pre><code>curl -L https://randompixle.github.io/Solar-Neo/Versions/Solar-Neo-v0.7.0/Release.zip -o solar-neo.zip
+unzip solar-neo.zip -d Solar-Neo
+cd Solar-Neo/Release
+./install.sh
+solar --version</code></pre>
+    <div class="hr"></div>
+    <p>See <a href="./versions.html">all versions</a> or jump to the <a href="./latest.html">latest</a>.</p>
+  </div>
+  <div class="footer">© Solar Neo — GitHub Pages</div>
 </div>
-
-<main class="container">
-  <h1>Solar Neo</h1>
-  <div class="card">
-    <p>Unified package workflow for immutable and hybrid Linux systems. This site hosts public notes and archived releases.</p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <a class="button" href="https://github.com/randompixle/Solar-Neo/releases">Get Latest Release</a>
-      <a class="button" href="./versions.html">Browse Versions</a>
-      <a class="button" href="./notes.html">View Notes</a>
-    </div>
-  </div>
-  <h2>How public notes work</h2>
-  <div class="card">
-    <ul>
-      <li>Notes are public and stored in this repository under <span class="mono">/notes/notes.json</span>.</li>
-      <li>Solar Neo can fetch notes directly from the site.</li>
-      <li>Users who wish to publish notes must authenticate with GitHub (per-user token).</li>
-    </ul>
-  </div>
-  <h2>Repository layout</h2>
-  <div class="card mono small">/docs — GitHub Pages site (this)
-/notes/notes.json — Public note store
-/Versions/ — Archived releases</div>
-  <div class="footer">© Solar Neo. Public data may be mirrored by forks and archives.</div>
-</main>
+<script type="module" src="./assets/js/common.js"></script>
+<script type="module">import {initTheme} from './assets/js/common.js'; initTheme();</script>
 </body></html>
