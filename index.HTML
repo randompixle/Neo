@@ -9,13 +9,21 @@
 </style>
 </head><body>
 <div class="container">
-  <div class="header">
-    <div class="logo"></div><div class="title">Solar Neo <span class="badge">Platform</span></div>
+  <header class="header">
+    <div class="header-brand">
+      <div class="logo"></div>
+      <div class="title">Solar Neo <span class="badge">Platform</span></div>
+    </div>
     <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
-    <a class="btn" href="./docs/index.html">Docs Portal</a>
-    <a class="btn" href="./docs/latest.html">Latest Release</a>
-    <a class="btn" href="https://github.com/RandomPixle/Solar-Neo" target="_blank" rel="noopener">GitHub</a>
-  </div>
+    <button class="btn nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false">Menu</button>
+    <nav id="site-nav" class="header-nav" data-nav data-open="true" aria-label="Primary">
+      <a class="btn" href="./docs/index.html">Docs portal</a>
+      <a class="btn" href="./docs/explore.html">Explore docs</a>
+      <a class="btn" href="./docs/latest.html" data-role="download-latest" data-label-template="Latest release ({version})" data-fallback="Latest release">Latest release</a>
+      <a class="btn" href="./docs/notes.html">Notes</a>
+      <a class="btn" href="https://github.com/RandomPixle/Solar-Neo" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
 
   <section class="hero">
     <div class="hero-title">Solar Neo is the package manager built for fast installs.</div>
@@ -55,3 +63,4 @@
 </div>
 <script type="module" src="./docs/assets/js/site.js"></script>
 </body></html>
+

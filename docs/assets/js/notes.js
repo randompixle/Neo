@@ -1,5 +1,7 @@
-const OWNER='randompixle', REPO='Solar-Neo', BRANCH='main';
+import {h} from './common.js';
+
 const NOTES_PATH='notes/notes.json';
+const SUBMIT_ENDPOINT='../cgi-bin/submit_note.py';
 
 function setStatus(msgEl, type, text){
   if(!msgEl) return;
@@ -8,74 +10,119 @@ function setStatus(msgEl, type, text){
   if(type) msgEl.classList.add(type);
 }
 
+function setNotesMessage(container, text, state){
+  if(!container) return;
+  container.dataset.state=state||'';
+  container.setAttribute('aria-busy', state==='loading' ? 'true' : 'false');
+  container.innerHTML='';
+  container.append(h('div',{class:'notes-placeholder'},text));
+}
+
+function renderNotes(container, data){
+  if(!container) return;
+  const entries=Object.entries(data||{})
+    .map(([pkg, list])=>[pkg, Array.isArray(list)?list.filter(item=>typeof item==='string'&&item.trim()):[]])
+    .filter(([, list])=>list.length>0)
+    .sort((a,b)=>a[0].localeCompare(b[0], undefined,{sensitivity:'base'}));
+
+  if(entries.length===0){
+    setNotesMessage(container,'No notes yet. Submit the first update to kick things off.','empty');
+    return;
+  }
+
+  container.dataset.state='ready';
+  container.setAttribute('aria-busy','false');
+  container.innerHTML='';
+  const frag=document.createDocumentFragment();
+  for(const [pkg, list] of entries){
+    const items=list.map(item=>h('li',{},item));
+    frag.append(h('article',{class:'notes-package', role:'listitem'},[
+      h('div',{class:'notes-package-title'},pkg),
+      h('ul',{class:'notes-package-list'},items)
+    ]));
+  }
+  container.append(frag);
+}
+
 export default function initNotesPage(){
-  const notesBox=document.getElementById('notes');
-  if(!notesBox) return;
+  const notesList=document.querySelector('[data-notes]');
+  if(!notesList) return;
+
   const msg=document.getElementById('msg');
   const submitBtn=document.getElementById('submit');
   const pkgInput=document.getElementById('pkg');
   const noteInput=document.getElementById('note');
+  const passwordInput=document.getElementById('password');
+  const refreshBtn=document.querySelector('[data-notes-refresh]');
+  const defaultSubmitLabel=submitBtn?.textContent||'Submit note';
 
-  async function loadNotes(){
-    try{
-      const res=await fetch(`../${NOTES_PATH}?cache=`+Date.now());
-      if(!res.ok) throw 0;
-      const j=await res.json();
-      const lines=[];
-      for(const [pkg, arr] of Object.entries(j)){
-        lines.push(`## ${pkg}`);
-        for(const t of arr) lines.push(`- ${t}`);
-        lines.push('');
-      }
-      notesBox.textContent=lines.join('\n').trim()||'No notes yet.';
-    }catch{
-      notesBox.textContent='No notes yet or failed to load.';
+  async function loadNotes({showSpinner=true}={}){
+    if(showSpinner){
+      setNotesMessage(notesList,'Loading notes…','loading');
     }
-  }
-
-  function getToken(){ return localStorage.getItem('SOLAR_GH_TOKEN') || ''; }
-
-  async function shaOf(path){
-    const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`, {headers:{'Accept':'application/vnd.github+json'}});
-    if(!r.ok) return null; const j=await r.json(); return j.sha||null;
-  }
-
-  async function readNotesFromGit(){
-    const r=await fetch(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${NOTES_PATH}?cache=`+Date.now());
-    if(!r.ok) return {}; try{ return await r.json(); }catch{ return {}; }
-  }
-
-  async function writeFileToGit(path, content, message){
-    const token=getToken(); if(!token) throw new Error('No token in localStorage under SOLAR_GH_TOKEN');
-    const sha=await shaOf(path);
-    const body={ message, content:btoa(unescape(encodeURIComponent(content))), branch:BRANCH };
-    if(sha) body.sha=sha;
-    const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`, {
-      method:'PUT', headers:{'Authorization':`Bearer ${token}`,'Accept':'application/vnd.github+json'}, body:JSON.stringify(body)
-    });
-    if(!r.ok){ throw new Error('GitHub write failed: '+await r.text()); }
-    return await r.json();
+    try{
+      const res=await fetch(`../${NOTES_PATH}?cache=`+Date.now(),{cache:'no-store'});
+      if(res.status===404){
+        renderNotes(notesList,{});
+        return;
+      }
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      let payload=null;
+      try{
+        payload=await res.json();
+      }catch(parseErr){
+        console.warn('Invalid notes payload, treating as empty',parseErr);
+        payload={};
+      }
+      renderNotes(notesList,payload);
+    }catch(err){
+      console.error('Failed to load notes',err);
+      setNotesMessage(notesList,'Unable to load notes. Serve the repo with `python -m http.server --cgi`; submitting a new note will recreate notes/notes.json if needed.','error');
+    }
   }
 
   submitBtn?.addEventListener('click', async()=>{
     setStatus(msg,'','');
     const pkg=(pkgInput?.value||'').trim();
     const note=(noteInput?.value||'').trim();
+    const password=(passwordInput?.value||'').trim();
+    if(!password){ setStatus(msg,'err','Password is required.'); return; }
     if(!pkg||!note){ setStatus(msg,'err','Package and note are required.'); return; }
-    submitBtn.disabled=true;
+    if(submitBtn){
+      submitBtn.disabled=true;
+      submitBtn.setAttribute('aria-busy','true');
+      submitBtn.textContent='Submitting…';
+    }
     try{
-      const notes=await readNotesFromGit();
-      if(!notes[pkg]) notes[pkg]=[];
-      notes[pkg].push(note);
-      const newContent=JSON.stringify(notes,null,2);
-      await writeFileToGit(NOTES_PATH,newContent,`Add note for ${pkg}`);
+      const res=await fetch(SUBMIT_ENDPOINT,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({password,pkg,note})
+      });
+      let out=null;
+      try{ out=await res.json(); }catch{}
+      if(!res.ok||!out?.ok){
+        const err=out?.error||`Submission failed (${res.status})`;
+        throw new Error(err);
+      }
       setStatus(msg,'ok','Note submitted.');
       if(pkgInput) pkgInput.value='';
       if(noteInput) noteInput.value='';
-      await loadNotes();
-    }catch(e){ setStatus(msg,'err',String(e?.message||e||'Unknown error')); }
-    finally{ submitBtn.disabled=false; }
+      await loadNotes({showSpinner:false});
+    }catch(e){
+      setStatus(msg,'err',String(e?.message||e||'Unknown error'));
+    }finally{
+      if(submitBtn){
+        submitBtn.disabled=false;
+        submitBtn.removeAttribute('aria-busy');
+        submitBtn.textContent=defaultSubmitLabel;
+      }
+    }
   });
 
-  loadNotes();
+  refreshBtn?.addEventListener('click', ()=>{
+    loadNotes({showSpinner:true});
+  });
+
+  loadNotes({showSpinner:true});
 }

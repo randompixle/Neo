@@ -3,8 +3,7 @@
 <title>Solar Neo — Latest</title>
 <link rel="stylesheet" href="./assets/css/style.css">
 <script type="module">
-import {BASE,getJSON,initTheme} from './assets/js/common.js';
-initTheme();
+import {BASE,getJSON} from './assets/js/common.js';
 (async ()=>{
   try{
     const d=await getJSON(`${BASE}/Versions/Version_Index.json`);
@@ -23,16 +22,25 @@ initTheme();
 </script>
 </head><body>
   <div class="container">
-    <div class="header">
-      <div class="logo"></div><div class="title">Solar Neo <span class="badge">Latest</span></div>
+    <header class="header">
+      <div class="header-brand">
+        <div class="logo"></div>
+        <div class="title">Solar Neo <span class="badge">Latest</span></div>
+      </div>
       <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
-      <a class="btn" href="../index.HTML">Site home</a>
-      <a class="btn" href="./index.html">Docs portal</a>
-      <a class="btn" href="./documentation.html">Documentation</a>
-      <a class="btn" href="./versions.html">Release history</a>
-      <a class="btn" href="./latest.html" aria-current="page">Latest download</a>
-      <a class="btn" href="./notes.html">Notes</a>
-    </div>
+      <button class="btn nav-toggle" type="button" data-nav-toggle aria-controls="docs-nav" aria-expanded="false">Menu</button>
+      <nav id="docs-nav" class="header-nav" data-nav data-open="true" aria-label="Primary">
+        <a class="btn" href="../index.HTML">Site home</a>
+        <a class="btn" href="./index.html">Docs portal</a>
+        <a class="btn" href="./explore.html">Explore pages</a>
+        <a class="btn" href="./documentation.html">Documentation</a>
+        <a class="btn" href="./versions.html">Release history</a>
+        <a class="btn" href="./latest.html" aria-current="page">Latest download</a>
+        <a class="btn" href="./notes.html">Notes</a>
+      </nav>
+    </header>
     <div class="panel">Loading latest…</div>
   </div>
+<script type="module" src="./assets/js/site.js"></script>
 </body></html>
+

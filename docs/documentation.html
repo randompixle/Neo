@@ -3,18 +3,23 @@
 <title>Solar Neo — Documentation</title>
 <link rel="stylesheet" href="./assets/css/style.css"></head><body>
 <div class="container">
-  <div class="header">
+  <header class="header">
     <div class="header-brand">
-      <div class="logo"></div><div class="title">Solar Neo <span class="badge">Docs</span></div>
+      <div class="logo"></div>
+      <div class="title">Solar Neo <span class="badge">Docs</span></div>
     </div>
     <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
-    <a class="btn" href="../index.HTML">Site home</a>
-    <a class="btn" href="./index.html">Docs portal</a>
-    <a class="btn" href="./documentation.html" aria-current="page">Documentation</a>
-    <a class="btn" href="./versions.html">Release history</a>
-    <a class="btn" href="./latest.html">Latest download</a>
-    <a class="btn" href="./notes.html">Notes</a>
-  </div>
+    <button class="btn nav-toggle" type="button" data-nav-toggle aria-controls="docs-nav" aria-expanded="false">Menu</button>
+    <nav id="docs-nav" class="header-nav" data-nav data-open="true" aria-label="Primary">
+      <a class="btn" href="../index.HTML">Site home</a>
+      <a class="btn" href="./index.html">Docs portal</a>
+      <a class="btn" href="./explore.html">Explore pages</a>
+      <a class="btn" href="./documentation.html" aria-current="page">Documentation</a>
+      <a class="btn" href="./versions.html">Release history</a>
+      <a class="btn" href="./latest.html">Latest download</a>
+      <a class="btn" href="./notes.html">Notes</a>
+    </nav>
+  </header>
 
   <div class="doc-grid">
     <nav class="toc">
@@ -87,6 +92,6 @@
 
   <div class="footer">© Solar Neo — Documentation</div>
 </div>
-<script type="module" src="./assets/js/common.js"></script>
-<script type="module">import {initNavigation, initTheme} from './assets/js/common.js'; initTheme(); initNavigation();</script>
+<script type="module" src="./assets/js/site.js"></script>
 </body></html>
+
