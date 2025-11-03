@@ -114,6 +114,7 @@ pre{white-space:pre-wrap; background:#0e1530; padding:12px; border-radius:10px; 
   .toc strong{width:100%;}
   .nav-links{gap:8px;}
   .nav-links a{flex:1 1 140px;}
+  .notes-warning{flex-direction:column;}
 }
 
 @media (max-width: 440px){
