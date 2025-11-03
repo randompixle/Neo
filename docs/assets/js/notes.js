@@ -1,5 +1,5 @@
-const OWNER='randompixle', REPO='Solar-Neo', BRANCH='main';
 const NOTES_PATH='notes/notes.json';
+const SUBMIT_ENDPOINT='../cgi-bin/submit_note.py';
 
 function setStatus(msgEl, type, text){
   if(!msgEl) return;
@@ -33,42 +33,26 @@ export default function initNotesPage(){
     }
   }
 
-  function getToken(){ return localStorage.getItem('SOLAR_GH_TOKEN') || ''; }
-
-  async function shaOf(path){
-    const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`, {headers:{'Accept':'application/vnd.github+json'}});
-    if(!r.ok) return null; const j=await r.json(); return j.sha||null;
-  }
-
-  async function readNotesFromGit(){
-    const r=await fetch(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${NOTES_PATH}?cache=`+Date.now());
-    if(!r.ok) return {}; try{ return await r.json(); }catch{ return {}; }
-  }
-
-  async function writeFileToGit(path, content, message){
-    const token=getToken(); if(!token) throw new Error('No token in localStorage under SOLAR_GH_TOKEN');
-    const sha=await shaOf(path);
-    const body={ message, content:btoa(unescape(encodeURIComponent(content))), branch:BRANCH };
-    if(sha) body.sha=sha;
-    const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`, {
-      method:'PUT', headers:{'Authorization':`Bearer ${token}`,'Accept':'application/vnd.github+json'}, body:JSON.stringify(body)
-    });
-    if(!r.ok){ throw new Error('GitHub write failed: '+await r.text()); }
-    return await r.json();
-  }
-
   submitBtn?.addEventListener('click', async()=>{
     setStatus(msg,'','');
     const pkg=(pkgInput?.value||'').trim();
     const note=(noteInput?.value||'').trim();
+    const password=(document.getElementById('password')?.value||'').trim();
+    if(!password){ setStatus(msg,'err','Password is required.'); return; }
     if(!pkg||!note){ setStatus(msg,'err','Package and note are required.'); return; }
     submitBtn.disabled=true;
     try{
-      const notes=await readNotesFromGit();
-      if(!notes[pkg]) notes[pkg]=[];
-      notes[pkg].push(note);
-      const newContent=JSON.stringify(notes,null,2);
-      await writeFileToGit(NOTES_PATH,newContent,`Add note for ${pkg}`);
+      const res=await fetch(SUBMIT_ENDPOINT,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({password,pkg,note})
+      });
+      let out=null;
+      try{ out=await res.json(); }catch{}
+      if(!res.ok||!out?.ok){
+        const err=out?.error||`Submission failed (${res.status})`;
+        throw new Error(err);
+      }
       setStatus(msg,'ok','Note submitted.');
       if(pkgInput) pkgInput.value='';
       if(noteInput) noteInput.value='';
