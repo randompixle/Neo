@@ -1,50 +1,50 @@
-# Solar Neo Website Repository
+Solar Neo Website Repository
 
 This repository contains the files for the official Solar Neo website, including future public notes data.
 
-## Important Information
+Important Information
 
 Beginning with Solar Neo v0.7, this site may contain user-submitted notes.
 
 These notes are:
 
--Publicly visible
+Publicly visible
 
--Synced directly from Solar Neo installations
+Synced directly from Solar Neo installations
 
--Permanent once committed
+Permanent once committed
 
 If you clone or edit this repository, your system may download a growing archive of notes. This can:
 
--Use a large amount of storage over time
+Use a large amount of storage over time
 
--Accidentally sync changed notes back to GitHub
+Accidentally sync changed notes back to GitHub
 
--Affect all users who rely on this dataset
+Affect all users who rely on this dataset
 
-## Rules for Contribution
+Rules for Contribution
 
 Do not:
 
--Push test or joke notes
+Push test or joke notes
 
--Upload private or personal information
+Upload private or personal information
 
--Modify notes.json directly unless it is an approved change
+Modify notes.json directly unless it is an approved change
 
--Treat this repository as a sandbox
+Treat this repository as a sandbox
 
 Allowed usage:
 
--Updating website layout, styling, and content
+Updating website layout, styling, and content
 
--Contributing documentation
+Contributing documentation
 
--Maintaining official Solar Neo web infrastructure
+Maintaining official Solar Neo web infrastructure
 
--Solar Neo clients should be the only source of new notes. Manual modification should be avoided.
+Solar Neo clients should be the only source of new notes. Manual modification should be avoided.
 
-## Responsibility Notice
+Responsibility Notice
 
 By contributing to or modifying this repository, you agree to the following:
 
@@ -54,7 +54,7 @@ Once pushed, data cannot be guaranteed to be fully erased from history
 
 You are responsible for all content you add or modify
 
-## Final Statement
+Final Statement
 
 Thank you for helping support the Solar Neo project.
 Please submit significant changes through a Pull Request.
