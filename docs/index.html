@@ -42,8 +42,49 @@
 
   <section class="section panel">
     <h3>Quick start</h3>
-    <p class="muted">Install the CLI on a fresh host in minutes—no wall of commands.</p>
-    <p><a class="btn btn-primary" href="./latest.html">Visit the latest release page</a> to grab the newest bundle, then run the bundled installer for the one-command setup.</p>
+    <p class="muted">Install the CLI on a fresh host in minutes.</p>
+    <pre><code>LATEST_URL=$(python3 - <<'PY'
+import json
+import urllib.request
+
+INDEX_URL = "https://randompixle.github.io/Solar-Neo/Versions/Version_Index.json"
+
+def version_key(raw):
+    parts = []
+    for piece in (raw or "0").split('.'):
+        try:
+            parts.append(int(piece))
+        except ValueError:
+            parts.append(piece)
+    return parts
+
+with urllib.request.urlopen(INDEX_URL) as response:
+    data = json.load(response)
+
+versions = [entry for entry in data.get("versions", []) if entry.get("files")]
+if not versions:
+    raise SystemExit("No releases found in Version_Index.json")
+
+versions.sort(key=lambda entry: version_key(entry.get("version")), reverse=True)
+latest = versions[0]
+
+release_file = None
+for candidate in latest.get("files", []):
+    if candidate.get("name", "").lower() == "release.zip":
+        release_file = candidate.get("path")
+        break
+if release_file is None:
+    release_file = latest["files"][0]["path"]
+
+print(f"https://randompixle.github.io/Solar-Neo/Versions/{release_file}")
+PY
+)
+
+curl -L "$LATEST_URL" -o solar-neo.zip
+unzip -o solar-neo.zip -d Solar-Neo
+cd Solar-Neo/Release
+./install.sh
+solar --version</code></pre>
     <div class="hr"></div>
     <p>Looking for older builds? Browse the <a href="./versions.html">full release catalog</a> or jump directly to the <a href="./latest.html">latest stable bundle</a>.</p>
   </section>
