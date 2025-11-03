@@ -4,19 +4,13 @@
 <link rel="stylesheet" href="./assets/css/style.css"></head><body>
 <div class="container">
   <div class="header">
-    <div class="header-brand">
-      <div class="logo"></div><div class="title">Solar Neo <span class="badge" data-role="version-badge" data-template="{version} docs" data-fallback="Docs">Docs</span></div>
-    </div>
+    <div class="logo"></div><div class="title">Solar Neo <span class="badge" data-role="version-badge" data-template="{version} docs" data-fallback="Docs">Docs</span></div>
     <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
-    <button class="btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" class="header-nav" data-nav>
-      <a class="btn" href="../index.HTML">Site home</a>
-      <a class="btn" href="./index.html" aria-current="page">Docs portal</a>
-      <a class="btn" href="./documentation.html">Documentation</a>
-      <a class="btn" href="./versions.html">Release history</a>
-      <a class="btn" href="./latest.html" data-role="download-latest" data-label-template="Download {version}" data-fallback="Download latest release">Latest download</a>
-      <a class="btn" href="./notes.html">Notes</a>
-    </nav>
+    <a class="btn" href="./index.html">Home</a>
+    <a class="btn" href="./documentation.html">Documentation</a>
+    <a class="btn" href="./versions.html">Release history</a>
+    <a class="btn" href="./latest.html" data-role="download-latest" data-label-template="Download {version}" data-fallback="Download latest release">Latest download</a>
+    <a class="btn" href="./notes.html">Notes</a>
   </div>
 
   <section class="hero">
@@ -91,7 +85,7 @@ PY
 curl -L "$LATEST_URL" -o solar-neo.zip
 unzip -o solar-neo.zip -d Solar-Neo
 cd Solar-Neo/Release
-./install.sh
+sudo ./install.sh
 solar --version</code></pre>
     <div class="hr"></div>
     <p>Looking for older builds? Browse the <a href="./versions.html">full release catalog</a> or jump directly to the <a href="./latest.html">latest stable bundle</a>.</p>

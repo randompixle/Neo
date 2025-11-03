@@ -3,9 +3,8 @@
 <title>Solar Neo — Latest</title>
 <link rel="stylesheet" href="./assets/css/style.css">
 <script type="module">
-import {BASE,getJSON,initNavigation,initTheme} from './assets/js/common.js';
+import {BASE,getJSON,initTheme} from './assets/js/common.js';
 initTheme();
-window.addEventListener('DOMContentLoaded', initNavigation);
 (async ()=>{
   try{
     const d=await getJSON(`${BASE}/Versions/Version_Index.json`);
@@ -25,19 +24,14 @@ window.addEventListener('DOMContentLoaded', initNavigation);
 </head><body>
   <div class="container">
     <div class="header">
-      <div class="header-brand">
-        <div class="logo"></div><div class="title">Solar Neo <span class="badge">Latest</span></div>
-      </div>
+      <div class="logo"></div><div class="title">Solar Neo <span class="badge">Latest</span></div>
       <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
-      <button class="btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav">Menu</button>
-      <nav id="primary-nav" class="header-nav" data-nav>
-        <a class="btn" href="../index.HTML">Site home</a>
-        <a class="btn" href="./index.html">Docs portal</a>
-        <a class="btn" href="./documentation.html">Documentation</a>
-        <a class="btn" href="./versions.html">Release history</a>
-        <a class="btn" href="./latest.html" aria-current="page">Latest download</a>
-        <a class="btn" href="./notes.html">Notes</a>
-      </nav>
+      <a class="btn" href="../index.HTML">Site home</a>
+      <a class="btn" href="./index.html">Docs portal</a>
+      <a class="btn" href="./documentation.html">Documentation</a>
+      <a class="btn" href="./versions.html">Release history</a>
+      <a class="btn" href="./latest.html" aria-current="page">Latest download</a>
+      <a class="btn" href="./notes.html">Notes</a>
     </div>
     <div class="panel">Loading latest…</div>
   </div>
