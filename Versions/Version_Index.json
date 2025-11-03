@@ -1,3 +1,36 @@
 {
-  "files": []
+  "generated": "2024-05-26",
+  "versions": [
+    {
+      "name": "Solar Neo",
+      "version": "0.6.0",
+      "folder": "Solar-Neo-0.6.0",
+      "channel": "stable",
+      "sha256": "bf38881dbe0d2b7646342efe720a56b45eeac2d5a07a776f449127092dbf3eda",
+      "files": [
+        { "name": "Release.zip", "path": "Solar-Neo-0.6.0/Release.zip" }
+      ]
+    },
+    {
+      "name": "Solar Neo (Rebrand)",
+      "version": "0.5.0",
+      "folder": "Solar-Neo-REBRAND-0.5.0",
+      "channel": "stable",
+      "codename": "Rebrand",
+      "sha256": "561a92f16c971b9662aafa8a0245d41bd0620265c3a91cb006bed1d7043a4adb",
+      "files": [
+        { "name": "Release.zip", "path": "Solar-Neo-REBRAND-0.5.0/Release.zip" }
+      ]
+    },
+    {
+      "name": "Neo",
+      "version": "0.4.0",
+      "folder": "Neo-0.4.0",
+      "channel": "legacy",
+      "sha256": "d59e92b07ef2f46eddf88d44de1ec8350f3c7a21eb7b1f50e23a70a91e9a2135",
+      "files": [
+        { "name": "Release.zip", "path": "Neo-0.4.0/Release.zip" }
+      ]
+    }
+  ]
 }

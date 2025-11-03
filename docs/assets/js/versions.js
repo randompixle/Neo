@@ -1,51 +1,89 @@
-const API_RELEASES = "https://api.github.com/repos/randompixle/Solar-Neo/releases";
+import {BASE, getJSON, h, initTheme} from './common.js';
 
-async function loadVersions() {
-    const container = document.getElementById("version-list");
-    container.innerHTML = "<p>Loading…</p>";
-
-    try {
-        const res = await fetch(API_RELEASES);
-        if (!res.ok) throw new Error("GitHub API fail");
-        const releases = await res.json();
-
-        if (!releases.length) {
-            container.innerHTML = "<p>No releases found yet.</p>";
-            return;
-        }
-
-        releases.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
-
-        container.innerHTML = "";
-        releases.forEach(rel => {
-            const assetZip = rel.assets.find(a => a.name.toLowerCase().endsWith(".zip"));
-            const codename = rel.name.split(" ").slice(-1)[0] || "N/A";
-
-            const card = document.createElement("div");
-            card.className = "release-card";
-            card.innerHTML = `
-                <h2>${rel.tag_name}</h2>
-                <p><strong>Codename:</strong> ${codename}</p>
-                <p><strong>Date:</strong> ${new Date(rel.published_at).toLocaleDateString()}</p>
-                <p><strong>Channel:</strong> ${rel.prerelease ? "Prerelease" : "Stable"}</p>
-                <div class="actions">
-                    ${assetZip ? `
-                        <a class="btn" href="${assetZip.browser_download_url}">
-                            Download ZIP
-                        </a>
-                    ` : `<span class="btn disabled">No ZIP asset</span>`}
-                </div>
-            `;
-            container.appendChild(card);
-        });
-
-    } catch (err) {
-        console.error(err);
-        container.innerHTML = `
-            <p style="color:red;">Error loading releases.</p>
-            <p>Check GitHub rate limits or try again later.</p>
-        `;
-    }
+function normalizeFile(entry, file) {
+  if (!file) return { name: 'Download', path: null };
+  if (typeof file === 'string') {
+    return { name: file, path: `${entry.folder || ''}/${file}` };
+  }
+  const name = file.name || (file.path ? file.path.split('/').pop() : 'Download');
+  const path = file.path ?? (file.name ? `${entry.folder || ''}/${file.name}` : null);
+  return { name, path };
 }
 
-loadVersions();
+function buildCard(entry) {
+  const title = entry.name && entry.version
+    ? `${entry.name} — ${entry.version}`
+    : entry.name || entry.version || entry.folder || 'Version';
+
+  const details = [];
+  if (entry.codename) details.push(h('div', { class: 'card-sub' }, `Codename: ${entry.codename}`));
+  if (entry.channel) details.push(h('div', { class: 'card-sub' }, `Channel: ${entry.channel}`));
+  if (entry.date) details.push(h('div', { class: 'card-sub' }, `Released: ${entry.date}`));
+
+  const fileEntries = Array.isArray(entry.files) && entry.files.length
+    ? entry.files
+    : (entry.folder ? [{ name: 'Release.zip', path: `${entry.folder}/Release.zip` }] : []);
+
+  const actions = fileEntries
+    .map(file => {
+      const meta = normalizeFile(entry, file);
+      if (!meta.path) return null;
+      const cleanPath = meta.path.replace(/^\/+/, '');
+      const url = `${BASE}/Versions/${cleanPath}`;
+      return h('a', { class: 'btn', href: url }, meta.name);
+    })
+    .filter(Boolean);
+
+  if (entry.version) {
+    actions.push(h('a', { class: 'btn', href: `./version.html?v=${encodeURIComponent(entry.version)}` }, 'Details'));
+  }
+
+  const footer = actions.length
+    ? h('div', { class: 'card-foot' }, actions)
+    : h('div', { class: 'card-foot' }, 'No downloadable files.');
+
+  return h('div', { class: 'card' }, [
+    h('div', { class: 'card-title' }, title),
+    ...details,
+    footer,
+  ]);
+}
+
+function sortEntries(entries) {
+  return [...entries].sort((a, b) => {
+    const av = a.version || a.folder || '';
+    const bv = b.version || b.folder || '';
+    return bv.localeCompare(av, undefined, { numeric: true, sensitivity: 'base' });
+  });
+}
+
+async function main() {
+  initTheme();
+  const grid = document.getElementById('grid');
+  if (!grid) return;
+  grid.innerHTML = '<div class="panel">Loading…</div>';
+
+  try {
+    const data = await getJSON(`${BASE}/Versions/Version_Index.json`);
+    const entries = Array.isArray(data?.versions) && data.versions.length
+      ? data.versions
+      : Array.isArray(data?.files)
+        ? data.files
+        : [];
+
+    if (!entries.length) {
+      grid.innerHTML = '';
+      grid.append(h('div', { class: 'panel' }, 'No versions found in /Versions.'));
+      return;
+    }
+
+    grid.innerHTML = '';
+    sortEntries(entries).forEach(entry => grid.append(buildCard(entry)));
+  } catch (error) {
+    console.error(error);
+    grid.innerHTML = '';
+    grid.append(h('div', { class: 'panel' }, 'Failed to load versions directory.'));
+  }
+}
+
+main();
