@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="./assets/css/style.css"></head><body>
 <div class="container">
   <div class="header">
-    <div class="logo"></div><div class="title">Solar Neo <span class="badge">v0.8.0 Site</span></div>
+    <div class="logo"></div><div class="title">Solar Neo <span class="badge" data-role="version-badge" data-template="{version} Site" data-fallback="Site">Site</span></div>
     <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
     <a class="btn" href="./documentation.html">Docs</a>
     <a class="btn" href="./versions.html">Versions</a>
@@ -15,11 +15,11 @@
     <div class="hero-title">Deploy and manage Solar Neo packages with confidence.</div>
     <p class="hero-lead">Solar Neo streamlines DNF5 and Flatpak delivery into a single, predictable workflow. Automate installs, pin releases, and surface audit trails with tooling designed for desktop fleets.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="./latest.html">Download latest release</a>
+      <a class="btn btn-primary" href="./latest.html" data-role="download-latest" data-label-template="Download {version}" data-fallback="Download latest release">Download latest release</a>
       <a class="btn" href="./documentation.html">Read the docs</a>
       <a class="btn" href="https://github.com/RandomPixle/Solar-Neo" target="_blank" rel="noopener">View on GitHub</a>
     </div>
-    <div class="subtle">Serving v0.8.0 — compatible with Fedora 39+ workstations and Flatpak-enabled hosts.</div>
+    <div class="subtle" data-role="version-message" data-prefix="Serving " data-suffix=" — compatible with Fedora 39+ workstations and Flatpak-enabled hosts." data-fallback="Serving latest release — compatible with Fedora 39+ workstations and Flatpak-enabled hosts.">Serving latest release — compatible with Fedora 39+ workstations and Flatpak-enabled hosts.</div>
   </section>
 
   <section class="section">
@@ -54,6 +54,5 @@
 
   <div class="footer">© Solar Neo — GitHub Pages</div>
 </div>
-<script type="module" src="./assets/js/common.js"></script>
-<script type="module">import {initTheme} from './assets/js/common.js'; initTheme();</script>
+<script type="module" src="./assets/js/site.js"></script>
 </body></html>
