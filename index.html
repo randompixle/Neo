@@ -1,13 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0; url=docs/" />
-    <title>Solar Neo Documentation</title>
-  </head>
-  <body>
-    <p>
-      Redirecting to the <a href="docs/">Solar Neo documentation</a>...
-    </p>
-  </body>
-</html>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solar Neo</title>
+<link rel="stylesheet" href="./docs/assets/css/style.css">
+<style>
+  body{background:radial-gradient(1400px 700px at 15% -10%, rgba(179,136,255,.12), transparent),
+       radial-gradient(900px 500px at 85% 120%, rgba(255,204,0,.08), transparent), var(--bg);}
+  .hero{margin-top:48px}
+</style>
+</head><body>
+<div class="container">
+  <div class="header">
+    <div class="logo"></div><div class="title">Solar Neo <span class="badge">Platform</span></div>
+    <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
+    <a class="btn" href="./docs/index.html">Docs Portal</a>
+    <a class="btn" href="./docs/latest.html">Latest Release</a>
+    <a class="btn" href="https://github.com/RandomPixle/Solar-Neo" target="_blank" rel="noopener">GitHub</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-title">Solar Neo keeps Fedora and Flatpak estates in orbit.</div>
+    <p class="hero-lead">From curated release channels to automated rollbacks, Solar Neo gives operators the visibility and control they need to deliver dependable workstations at scale.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="./docs/latest.html">Download v0.8.0</a>
+      <a class="btn" href="./docs/documentation.html">Product documentation</a>
+      <a class="btn" href="./docs/versions.html">Release history</a>
+    </div>
+  </section>
+
+  <section class="section panel">
+    <h3>Highlights</h3>
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">Fleet-ready workflows</div>
+        <div class="card-sub">Publish consistent baselines, bundle post-install tasks, and keep endpoints aligned with policy.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Transparent releases</div>
+        <div class="card-sub">Every build ships with checksums, metadata, and audit details so you can trust what you deploy.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Operator ergonomics</div>
+        <div class="card-sub">Human-friendly CLI with JSON output for automation lets you switch between terminal and pipelines effortlessly.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="callout">
+      Want to contribute? Open a pull request or share feedback in the <a href="https://github.com/RandomPixle/Solar-Neo/discussions" target="_blank" rel="noopener">project discussions</a>.
+    </div>
+  </section>
+
+  <div class="footer">© Solar Neo — Crafted for the Fedora community</div>
+</div>
+<script type="module" src="./docs/assets/js/common.js"></script>
+<script type="module">import {initTheme} from './docs/assets/js/common.js'; initTheme();</script>
+</body></html>

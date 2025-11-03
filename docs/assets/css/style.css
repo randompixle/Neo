@@ -36,3 +36,19 @@ a{color:var(--accent)}
 pre{white-space:pre-wrap; background:#0e1530; padding:12px; border-radius:10px; border:1px solid var(--border)}
 .footer{margin-top:30px; color:var(--muted); font-size:12px}
 .theme-toggle{margin-left:auto}
+.hero{display:flex; flex-direction:column; gap:18px; padding:32px; background:linear-gradient(180deg, rgba(179,136,255,.12), rgba(21,29,62,.95)); border-radius:18px; border:1px solid rgba(179,136,255,.25); box-shadow:0 12px 32px rgba(13,18,38,.45)}
+.hero-title{font-size:34px; font-weight:700; letter-spacing:-.02em}
+.hero-lead{color:var(--muted); font-size:16px; max-width:640px}
+.hero-actions{display:flex; gap:12px; flex-wrap:wrap}
+.muted{color:var(--muted)}
+.section{margin-top:28px}
+.section h3{margin:0 0 8px; font-size:18px}
+.section p{margin:0 0 12px}
+.toc{position:sticky; top:24px; display:flex; flex-direction:column; gap:8px; padding:16px; background:linear-gradient(180deg, #111a34,#0c1326); border-radius:14px; border:1px solid var(--border)}
+.toc a{text-decoration:none; color:var(--muted); font-size:14px}
+.toc a:hover{color:var(--accent)}
+.doc-grid{display:grid; grid-template-columns: minmax(220px, 260px) 1fr; gap:24px; align-items:start}
+.callout{padding:16px; border-radius:12px; background:linear-gradient(180deg, rgba(43,214,123,.12), rgba(21,29,62,.8)); border:1px solid rgba(43,214,123,.35); color:#bff5d6; font-size:14px}
+.subtle{font-size:13px; color:var(--muted)}
+.list-spaced{margin:0; padding-left:18px}
+.list-spaced li{margin-bottom:8px}

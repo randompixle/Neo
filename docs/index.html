@@ -6,22 +6,56 @@
   <div class="header">
     <div class="logo"></div><div class="title">Solar Neo <span class="badge">v0.8.0 Site</span></div>
     <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
+    <a class="btn" href="./documentation.html">Docs</a>
     <a class="btn" href="./versions.html">Versions</a>
     <a class="btn" href="./latest.html">Latest</a>
   </div>
-  <div class="panel">
-    <h2>Welcome to Solar Neo</h2>
-    <p>Multi-backend helper (dnf5/Flatpak). Releases are hosted outside <code>/docs</code> under <code>/Versions</code>.</p>
-    <div class="hr"></div>
-    <h3>Install (CLI)</h3>
+
+  <section class="hero">
+    <div class="hero-title">Deploy and manage Solar Neo packages with confidence.</div>
+    <p class="hero-lead">Solar Neo streamlines DNF5 and Flatpak delivery into a single, predictable workflow. Automate installs, pin releases, and surface audit trails with tooling designed for desktop fleets.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="./latest.html">Download latest release</a>
+      <a class="btn" href="./documentation.html">Read the docs</a>
+      <a class="btn" href="https://github.com/RandomPixle/Solar-Neo" target="_blank" rel="noopener">View on GitHub</a>
+    </div>
+    <div class="subtle">Serving v0.8.0 — compatible with Fedora 39+ workstations and Flatpak-enabled hosts.</div>
+  </section>
+
+  <section class="section">
+    <h3>What you get</h3>
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">Unified backend control</div>
+        <div class="card-sub">Use one CLI to coordinate both DNF5 repositories and Flatpak remotes without switching contexts.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Release insights</div>
+        <div class="card-sub">Check hashes, compare manifests, and quickly locate fixes from our curated version history.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Safe automation</div>
+        <div class="card-sub">Scriptable installs, rollbacks, and environment health checks keep your deployment pipeline dependable.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section panel">
+    <h3>Quick start</h3>
+    <p class="muted">Install the CLI on a fresh host in minutes.</p>
     <pre><code>curl -L https://randompixle.github.io/Solar-Neo/Versions/Solar-Neo-v0.7.0/Release.zip -o solar-neo.zip
 unzip solar-neo.zip -d Solar-Neo
 cd Solar-Neo/Release
 ./install.sh
 solar --version</code></pre>
     <div class="hr"></div>
-    <p>See <a href="./versions.html">all versions</a> or jump to the <a href="./latest.html">latest</a>.</p>
+    <p>Looking for older builds? Browse the <a href="./versions.html">full release catalog</a> or jump directly to the <a href="./latest.html">latest stable bundle</a>.</p>
+  </section>
+
+  <div class="section callout">
+    <strong>New to Solar Neo?</strong> Our refreshed <a href="./documentation.html">documentation</a> covers workflows, environment setup, and troubleshooting tips.
   </div>
+
   <div class="footer">© Solar Neo — GitHub Pages</div>
 </div>
 <script type="module" src="./assets/js/common.js"></script>
