@@ -1,4 +1,4 @@
-import {BASE, getJSON, h, initTheme} from './common.js';
+import {BASE, getJSON, h, initNavigation, initTheme} from './common.js';
 
 function normalizeFile(entry, file) {
   if (!file) return { name: 'Download', path: null };
@@ -59,6 +59,7 @@ function sortEntries(entries) {
 
 async function main() {
   initTheme();
+  initNavigation();
   const grid = document.getElementById('grid');
   if (!grid) return;
   grid.innerHTML = '<div class="panel">Loading…</div>';

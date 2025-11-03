@@ -1,4 +1,4 @@
-import { BASE, getJSON, initTheme } from './common.js';
+import { BASE, getJSON, initNavigation, initTheme } from './common.js';
 
 function normalizeVersion(value) {
   if (value == null) return null;
@@ -120,4 +120,5 @@ async function hydrateSiteMetadata() {
 }
 
 initTheme();
+initNavigation();
 hydrateSiteMetadata();

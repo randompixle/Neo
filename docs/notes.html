@@ -1,32 +1,60 @@
-<!doctype html>
-<html lang="en"><head>
+<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Solar Neo — Notes</title>
-<link rel="stylesheet" href="./assets/css/style.css">
-<script defer src="./assets/js/notes.js"></script>
-</head><body>
-<div class="nav container">
-  <div class="brand">Solar Neo <span class="tag">Notes</span></div>
-  <div style="margin-left:auto;display:flex;gap:16px">
-    <a href="./index.html">Home</a>
-    <a href="./versions.html">Versions</a>
-    <a href="./notes.html">Notes</a>
+<link rel="stylesheet" href="./assets/css/style.css"></head><body>
+<div class="container">
+  <div class="header">
+    <div class="header-brand">
+      <div class="logo"></div><div class="title">Solar Neo <span class="badge">Notes</span></div>
+    </div>
+    <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
+    <button class="btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav">Menu</button>
+    <nav id="primary-nav" class="header-nav" data-nav>
+      <a class="btn" href="../index.HTML">Site home</a>
+      <a class="btn" href="./index.html">Docs portal</a>
+      <a class="btn" href="./documentation.html">Documentation</a>
+      <a class="btn" href="./versions.html">Release history</a>
+      <a class="btn" href="./latest.html">Latest download</a>
+      <a class="btn" href="./notes.html" aria-current="page">Notes</a>
+    </nav>
   </div>
+
+  <section class="panel">
+    <h1 style="margin:0 0 12px">Team notes</h1>
+    <p class="muted">Entries are stored directly in the repository at <code class="mono">notes/notes.json</code>. Submitting a note publishes it immediately once your browser writes to GitHub.</p>
+  </section>
+
+  <section class="panel" style="margin-top:24px">
+    <h2 style="margin:0 0 14px">Add a note</h2>
+    <div class="notes-form">
+      <label for="pkg">Package name</label>
+      <input id="pkg" class="input input-full" placeholder="e.g., vlc">
+      <label for="note">Note</label>
+      <textarea id="note" rows="4" class="input input-full input-area" placeholder="Write a short note."></textarea>
+      <div class="notes-warning" role="alert">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 5l9 16H3l9-16z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 10v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="17.5" r="1" fill="currentColor"/></svg>
+        <p>Submitting uses your browser and a personal GitHub token with repository write access. Review the note before publishing &mdash; the change becomes public immediately.</p>
+      </div>
+      <button id="submit" class="btn btn-primary">Submit note</button>
+      <div id="msg" class="status small" role="status" aria-live="polite"></div>
+    </div>
+    <p class="small muted" style="margin-top:18px">Store your token in <code class="mono">localStorage</code> as <code class="mono">SOLAR_GH_TOKEN</code> to enable submissions.</p>
+  </section>
+
+  <section class="section">
+    <h2 style="margin-bottom:12px">Browse notes</h2>
+    <div class="panel" style="padding:0">
+      <pre id="notes" class="mono small" style="margin:0; padding:16px; min-height:160px;" aria-live="polite">Loading notes...</pre>
+    </div>
+  </section>
+
+  <div class="footer">© Solar Neo — Notes</div>
 </div>
-<main class="container">
-  <h1>Public Notes</h1>
-  <div class="card small">Notes are public and stored in this repository at <span class="mono">/notes/notes.json</span>.</div>
-  <div class="card">
-    <label>Package name</label>
-    <input id="pkg" class="input" placeholder="e.g., vlc">
-    <label style="margin-top:10px;display:block;">Note</label>
-    <textarea id="note" rows="4" class="input" placeholder="Write a short note."></textarea>
-    <div class="small" style="margin:8px 0 14px">Warning: Submitting a note will publish it publicly to this repository.</div>
-    <button id="submit" class="button">Submit Note (GitHub Token Required)</button>
-    <div id="msg" class="small" style="margin-top:8px;"></div>
-  </div>
-  <h2>Browse</h2>
-  <div id="notes" class="card mono small"></div>
-  <div class="footer">To submit, you need a GitHub token with repo write access. It is used from your browser; do not share tokens.</div>
-</main>
+<script type="module">
+import {initNavigation, initTheme} from './assets/js/common.js';
+import initNotesPage from './assets/js/notes.js';
+initTheme();
+initNavigation();
+initNotesPage();
+</script>
 </body></html>
