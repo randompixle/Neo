@@ -3,41 +3,19 @@
 <title>Solar Neo — Documentation</title>
 <link rel="stylesheet" href="./assets/css/style.css"></head><body>
 <div class="container">
-<div class="header">
-  <div class="header-brand">
-    <div class="logo"></div>
-    <div class="title">Solar Neo</div>
-  </div>
-  <button id="theme-btn" class="btn theme-toggle">Theme: dark</button>
-  <a class="btn" href="../index.HTML">Home</a>
-  <a class="btn" href="./documentation.html" aria-current="page">Documentation</a>
-  <a class="btn" href="./versions.html">Release history</a>
-  <a class="btn" href="./latest.html">Download v0.6.0</a>
-  <a class="btn" href="./notes.html">Notes</a>
-</div>
-
-  
-<div class="header">
-  <div class="header-brand">
-    <div class="logo"></div>
-    <div class="title">Solar Neo</div>
-  </div>
-  <button id="theme-btn" class="btn theme-toggle">Theme: dark</button>
-  <a class="btn" href="../index.HTML">Home</a>
-  <a class="btn" href="./documentation.html" >Documentation</a>
-  <a class="btn" href="./versions.html">Release history</a>
-  <a class="btn" href="./latest.html">Download v0.6.0</a>
-  <a class="btn" href="./notes.html">Notes</a>
-</div>
-<div class="title">Solar Neo <span class="badge">Docs</span></div>
+  <div class="header">
+    <div class="header-brand">
+      <div class="logo"></div>
+      <div class="title">Solar Neo</div>
     </div>
-    <button id="theme-btn" class="btn theme-toggle">Theme: Mixed</button>
-    <a class="btn" href="../index.HTML">Site home</a>
-    <a class="btn" href="./index.html">Docs portal</a>
-    <a class="btn" href="./documentation.html"  >Documentation</a>
-    <a class="btn" href="./versions.html">Release history</a>
-    <a class="btn" href="./latest.html">Latest download</a>
-    <a class="btn" href="./notes.html">Notes</a>
+    <button id="theme-btn" class="btn theme-toggle">Theme: dark</button>
+    <button class="btn nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false">Menu</button>
+    <nav id="site-nav" class="header-nav" data-nav>
+      <a class="btn" href="../index.HTML">Home</a>
+      <a class="btn" href="./documentation.html" aria-current="page">Documentation</a>
+      <a class="btn" href="./versions.html">Release history</a>
+      <a class="btn" href="./latest.html">Latest download</a>
+    </nav>
   </div>
 
   <div class="doc-grid">
@@ -66,45 +44,66 @@
 
       <section id="commands" class="section">
         <h3>Core commands</h3>
+        <p>The v0.7 CLI ships with a single entry point named <code>solar</code>. Run <code>python3 -m solarneo</code> if your shell
+          does not expose the launcher on the <code>PATH</code>. Each command prints a banner before executing and returns a
+          non-zero exit code when something goes wrong, making it easy to script.</p>
         <ul class="list-spaced">
-          <li><code>solar status</code> — display enabled repositories, Flatpak remotes, and last sync timestamps.</li>
-          <li><code>solar install &lt;package&gt;</code> — install a package across both DNF5 and Flatpak backends if available.</li>
-          <li><code>solar pin &lt;package&gt;=&lt;version&gt;</code> — lock a package to a known-good build and prevent accidental upgrades.</li>
-          <li><code>solar diff &lt;versionA&gt; &lt;versionB&gt;</code> — compare manifests to understand what changed between releases.</li>
+          <li><code>solar version</code> — show the installed client build, query the update API for the newest tag, and offer to
+            install it in-place.</li>
+          <li><code>solar update</code> — skip the version comparison prompt and immediately download and install the newest
+            GitHub release after confirmation.</li>
+          <li><code>solar sys</code> — list the package backends detected on the host (DNF5 and/or Flatpak).</li>
+          <li><code>solar search &lt;query&gt;</code> — proxy the query to both DNF5 and Flatpak and print any matches that come
+            back.</li>
+          <li><code>solar install &lt;name&gt;</code> — install a package via DNF5 when available, falling back to Flatpak.</li>
+          <li><code>solar remove &lt;name&gt;</code> — uninstall the package through the same backend that handled the install.</li>
+          <li><code>solar notes &lt;app&gt;</code> — fetch community and developer release notes for the given application.</li>
+          <li><code>solar notes &lt;app&gt; add "message"</code> — submit a new community note to the shared feed.</li>
+          <li><code>solar devnote add &lt;app&gt; "message"</code> — publish a developer note when the <code>SOLAR_DEV_TOKEN</code>
+            environment variable is set.</li>
         </ul>
-        <p class="muted">All commands support <code>--help</code> flags for additional switches and examples.</p>
+        <p class="muted">If you prefer unattended upgrades, pipe a default answer into the prompts, for example
+          <code>yes | solar update</code>.</p>
       </section>
 
       <section id="configuration" class="section">
         <h3>Configuration</h3>
-        <p>Solar Neo reads configuration from <code>/etc/solar/solar.toml</code>. Common keys include:</p>
+        <p>The client keeps all state inside your home directory so that system access is not required.</p>
         <ul class="list-spaced">
-          <li><code>channels</code> — define the remote DNF5 and Flatpak endpoints to sync.</li>
-          <li><code>default_profile</code> — pick the profile that loads on launch. Useful when testing staging vs. production settings.</li>
-          <li><code>allow_beta</code> — set to <code>true</code> to automatically enroll machines into beta drop-ins.</li>
+          <li><code>~/.local/share/solarneo/solarneo</code> — the installed client code. Backups live alongside it under
+            <code>~/.local/share/solarneo/.backup</code>.</li>
+          <li><code>~/.config/solarneo/</code> — store any optional configuration files or deployment manifests you need.</li>
+          <li><code>~/.cache/solarneo/</code> — download cache used during updates.</li>
         </ul>
-        <p>Apply changes with <code>sudo solar reload</code>. The command validates syntax before replacing live configuration.</p>
+        <p>When you invoke <code>solar update</code> the CLI automatically snapshots the current install into the backup folder
+          before replacing it with the newly downloaded build.</p>
       </section>
 
       <section id="automation" class="section">
         <h3>Automation tips</h3>
         <p>Solar Neo is script-friendly and can be embedded in provisioning pipelines.</p>
         <ul class="list-spaced">
-          <li>Export <code>SOLAR_NONINTERACTIVE=1</code> to suppress prompts during unattended installs.</li>
-          <li>Use <code>solar plan</code> to preview upcoming upgrades and emit machine-readable JSON for CI gates.</li>
-          <li>Check <code>~/.local/share/solar/logs</code> for detailed execution logs and signature verification output.</li>
+          <li>Combine <code>solar search</code> with traditional UNIX tools like <code>grep</code> to filter DNF5 or Flatpak
+            results for automation.</li>
+          <li>Pipe <code>yes</code> into <code>solar update</code> or <code>solar install</code> when you need unattended
+            confirmations.</li>
+          <li>Export <code>SOLAR_DEV_TOKEN</code> before running <code>solar devnote add …</code> so that release engineers can
+            post maintainer notes from CI.</li>
         </ul>
-        <div class="callout">Tip: combine <code>solar plan</code> with <code>jq</code> to produce dashboards that highlight risky updates before rollout.</div>
+        <div class="callout">Tip: Script <code>solar version</code> during health checks to quickly learn which nodes are out of
+          date before kicking off a fleet-wide update.</div>
       </section>
 
       <section id="troubleshooting" class="section">
         <h3>Troubleshooting</h3>
         <ul class="list-spaced">
-          <li><strong>Signature mismatch</strong> — rerun <code>solar fetch --refresh</code> to clear caches and download fresh metadata.</li>
-          <li><strong>Flatpak remote offline</strong> — validate the remote URL with <code>flatpak remote-ls</code> and confirm firewall access.</li>
-          <li><strong>Service stalled</strong> — check <code>systemctl status solar.service</code> to review journal entries and restart the daemon.</li>
+          <li><strong>Download failures</strong> — re-run <code>solar update</code>. The CLI prints the HTTP error it encounters when it cannot reach GitHub releases.</li>
+          <li><strong>Unzip errors</strong> — verify the release archive downloaded completely. Partial downloads will surface as
+            <code>unzip failed</code> messages.</li>
+          <li><strong>No backend detected</strong> — install either <code>dnf5</code> or <code>flatpak</code> so that package
+            operations have a provider.</li>
         </ul>
-        <p class="subtle">Still stuck? File an issue on <a href="https://github.com/RandomPixle/Solar-Neo/issues" target="_blank" rel="noopener">GitHub</a> with the output of <code>solar report</code>.</p>
+        <p class="subtle">Still stuck? File an issue on <a href="https://github.com/RandomPixle/Solar-Neo/issues" target="_blank" rel="noopener">GitHub</a> with the full console output from the command you ran.</p>
       </section>
     </div>
   </div>
