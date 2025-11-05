@@ -1,4 +1,4 @@
-import {BASE,getJSON,h,sha256hex,initNavigation,initTheme} from './common.js';
+import {BASE,getJSON,h,sha256hex,initNavigation,initTheme,initSecretGame} from './common.js';
 
 function renderNotFound(){
   const title=document.getElementById('ver-title');
@@ -46,6 +46,7 @@ async function loadChangelog(entry){
 async function main(){
   initTheme();
   initNavigation();
+  initSecretGame();
   const p=new URLSearchParams(location.search);
   const ver=p.get('v');
   const data=await getJSON(`${BASE}/Versions/Version_Index.json`);

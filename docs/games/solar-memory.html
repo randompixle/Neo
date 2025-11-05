@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solar Neo — Solar Memory</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .memory-panel{display:flex;flex-direction:column;gap:18px;align-items:center;text-align:center;padding:24px}
+    .memory-header{display:flex;flex-direction:column;gap:6px;align-items:center}
+    .memory-stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .memory-stats span{padding:6px 12px;border-radius:999px;background:rgba(179,136,255,.18);border:1px solid rgba(179,136,255,.35);font-weight:600;font-size:14px;color:#e6ecff}
+    .memory-grid{display:grid;grid-template-columns:repeat(4,70px);gap:12px;justify-content:center}
+    .memory-card{width:70px;height:90px;border-radius:14px;background:rgba(5,10,22,.8);border:1px solid rgba(179,136,255,.35);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:600;cursor:pointer;transition:transform .2s,background .2s}
+    .memory-card[data-state="matched"]{background:rgba(76,175,80,.18);border-color:rgba(76,175,80,.35);cursor:default}
+    .memory-card[data-state="revealed"]{background:rgba(179,136,255,.45);transform:translateY(-4px)}
+    .memory-message{min-height:24px;font-size:14px;color:var(--muted);width:100%}
+    @media (max-width:520px){
+      .memory-panel{padding:20px 16px}
+      .memory-grid{grid-template-columns:repeat(4,64px);gap:10px}
+      .memory-card{width:64px;height:82px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-brand">
+        <div class="logo"></div>
+        <div class="title">Solar Neo</div>
+      </div>
+      <button id="theme-btn" class="btn theme-toggle">Theme: dark</button>
+      <button class="btn nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false">Menu</button>
+      <nav id="site-nav" class="header-nav" data-nav>
+        <a class="btn" href="../../index.HTML">Home</a>
+        <a class="btn" href="../documentation.html">Documentation</a>
+        <a class="btn" href="../versions.html">Release history</a>
+        <a class="btn" href="../latest.html">Latest download</a>
+      </nav>
+    </div>
+    <div class="panel memory-panel">
+      <div class="memory-header">
+        <h1>Solar Memory</h1>
+        <div class="memory-stats">
+          <span id="memory-moves">Moves: 0</span>
+          <span id="memory-time">Time: 0s</span>
+        </div>
+      </div>
+      <div id="memory-grid" class="memory-grid" role="grid" aria-label="Solar Memory board"></div>
+      <button id="memory-restart" class="btn btn-primary" type="button">Shuffle cells</button>
+      <div id="memory-message" class="memory-message">Flip two energy cells to find a match.</div>
+    </div>
+    <div class="footer">© Solar Neo — Solar Memory</div>
+  </div>
+  <script type="module">
+    import { initNavigation, initTheme, initSecretGame } from '../assets/js/common.js';
+    import { initMemory } from '../assets/js/games/solar-memory.js';
+    initTheme();
+    initNavigation();
+    initSecretGame();
+    initMemory();
+  </script>
+</body>
+</html>
