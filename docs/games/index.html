@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solar Neo — Game Room</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .games-hero{display:grid;gap:18px;padding:48px 32px 32px;text-align:center}
+    .games-hero h1{margin:0;font-size:32px;letter-spacing:-.02em}
+    .games-hero p{margin:0 auto;max-width:620px;font-size:16px;color:var(--muted)}
+    .games-grid{display:grid;gap:24px;padding:24px 32px 48px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .game-card{position:relative;display:flex;flex-direction:column;gap:12px;padding:24px;border-radius:20px;background:rgba(9,17,36,.78);border:1px solid rgba(118,144,255,.24);box-shadow:0 20px 40px rgba(4,6,16,.45)}
+    .game-card h2{margin:0;font-size:20px;font-weight:700}
+    .game-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+    .game-meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:rgba(230,241,255,.65)}
+    .instructions{padding:0 32px 48px;display:grid;gap:12px}
+    .instructions h3{margin:0;font-size:18px}
+    .instructions ul{margin:0;padding-left:20px;color:var(--muted);font-size:14px;line-height:1.7}
+    .cta-group{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+    .cta-group .btn{min-width:160px}
+    @media (max-width:720px){
+      .games-hero{padding:32px 18px 24px}
+      .games-hero h1{font-size:26px}
+      .games-grid{padding:18px}
+      .instructions{padding:0 18px 36px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-brand">
+        <div class="logo" data-game-url="./solar-sprint.html"></div>
+        <div class="title">Solar Neo</div>
+      </div>
+      <button id="theme-btn" class="btn theme-toggle">Theme: dark</button>
+      <button class="btn nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false">Menu</button>
+      <nav id="site-nav" class="header-nav" data-nav>
+        <a class="btn" href="../../index.HTML">Home</a>
+        <a class="btn" href="../documentation.html">Documentation</a>
+        <a class="btn" href="../versions.html">Release history</a>
+        <a class="btn" href="../latest.html">Latest download</a>
+        <a class="btn" href="./index.html" aria-current="page">Game room</a>
+      </nav>
+    </div>
+
+    <section class="panel games-hero">
+      <h1>Solar Sprint</h1>
+      <p>Welcome to the experimental mobility lab. Our lone simulator drops you into a neon obstacle course inspired by the high-speed antics of Carlson 2D. Can you sprint, dash, and wall-pop your way to the exit beacon faster than anyone else?</p>
+      <div class="cta-group">
+        <a class="btn btn-primary" href="./solar-sprint.html">Play Solar Sprint</a>
+        <a class="btn" href="#instructions">How to play</a>
+      </div>
+    </section>
+
+    <section class="games-grid">
+      <article class="game-card">
+        <div class="game-meta">Speed Trial · Keyboard &amp; touch</div>
+        <h2>Solar Sprint</h2>
+        <p>Blaze across a floating test facility, chaining dashes and precise jumps to shave milliseconds off your best clear time. Energy nodes reset your dash mid-air, hazards send you back to the start, and the glowing exit pillar records personal bests automatically.</p>
+        <a class="btn btn-primary" href="./solar-sprint.html">Launch</a>
+      </article>
+    </section>
+
+    <section id="instructions" class="panel instructions">
+      <h3>Controls &amp; tips</h3>
+      <ul>
+        <li>Use <strong>A / D</strong> or <strong>← / →</strong> to sprint. Tap the on-screen arrows when playing on a phone.</li>
+        <li>Tap <strong>W</strong>, <strong>↑</strong>, or the jump button to leap. A quick follow-up grants a double jump.</li>
+        <li>Hit <strong>Shift</strong> (or the dash icon) to burst forward. Collect energy nodes to refresh the dash mid-air.</li>
+        <li>Hazards reset the run. Reach the radiant exit pillar to lock in your time and update your personal best.</li>
+        <li>Your fastest finish is stored locally so you can chase new records every visit.</li>
+      </ul>
+    </section>
+
+    <div class="footer">© Solar Neo — Solar Sprint Test Facility</div>
+  </div>
+
+  <script type="module">
+    import { initNavigation, initTheme, initSecretGame } from '../assets/js/common.js';
+    initTheme();
+    initNavigation();
+    initSecretGame();
+  </script>
+</body>
+</html>
