@@ -3,6 +3,19 @@
   "versions": [
     {
       "name": "Solar Neo",
+      "version": "0.7",
+      "folder": "Solar-Neo-v0.7",
+      "channel": "stable",
+      "sha256": "6860e4fd44803af8707cd13c784f13158665ea5cf8f41b287657220132387953",
+      "files": [
+        {
+          "name": "Release.zip",
+          "path": "Solar-Neo-v0.7/Release.zip"
+        }
+      ]
+    },
+    {
+      "name": "Solar Neo",
       "version": "0.6.0",
       "folder": "Solar-Neo-0.6.0",
       "channel": "stable",
