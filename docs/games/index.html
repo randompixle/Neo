@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solar Neo — Game Room</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .games-hero{padding:48px 24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+    .games-hero h1{margin:0;font-size:32px;letter-spacing:-.02em}
+    .games-hero p{margin:0;max-width:520px;color:var(--muted)}
+    .games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;padding:0 24px 48px}
+    .game-card{display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:20px;background:rgba(5,10,22,.72);border:1px solid rgba(179,136,255,.25);box-shadow:0 20px 40px rgba(5,10,22,.45)}
+    .game-card h2{margin:0;font-size:20px}
+    .game-card p{margin:0;color:var(--muted);font-size:14px}
+    .game-card .btn{align-self:flex-start}
+    @media (max-width:640px){
+      .games-hero{padding:36px 16px}
+      .games-grid{padding:0 16px 36px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-brand">
+        <div class="logo"></div>
+        <div class="title">Solar Neo</div>
+      </div>
+      <button id="theme-btn" class="btn theme-toggle">Theme: dark</button>
+      <button class="btn nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false">Menu</button>
+      <nav id="site-nav" class="header-nav" data-nav>
+        <a class="btn" href="../../index.HTML">Home</a>
+        <a class="btn" href="../documentation.html">Documentation</a>
+        <a class="btn" href="../versions.html">Release history</a>
+        <a class="btn" href="../latest.html">Latest download</a>
+      </nav>
+    </div>
+    <section class="panel games-hero">
+      <h1>Solar Neo Game Room</h1>
+      <p>Take a break from the stars and try one of our bite-sized JavaScript games. They are all built for quick play sessions and shine on mobile, too.</p>
+    </section>
+    <section class="games-grid">
+      <article class="game-card">
+        <h2>Solar Glider</h2>
+        <p>Navigate a daring test flight through procedurally generated gates. Tap or click to keep the craft afloat.</p>
+        <a class="btn btn-primary" href="./solar-glider.html">Play Solar Glider</a>
+      </article>
+      <article class="game-card">
+        <h2>Solar Memory</h2>
+        <p>Flip the energy cells and match pairs as fast as you can. Every board is shuffled on load.</p>
+        <a class="btn btn-primary" href="./solar-memory.html">Play Solar Memory</a>
+      </article>
+      <article class="game-card">
+        <h2>Solar Reaction</h2>
+        <p>Test your reflexes by waiting for the pulse and tapping before the time window closes.</p>
+        <a class="btn btn-primary" href="./solar-reaction.html">Play Solar Reaction</a>
+      </article>
+      <article class="game-card">
+        <h2>Solar Sequence</h2>
+        <p>Memorize the station’s signal pattern and repeat it without a single slip to climb the levels.</p>
+        <a class="btn btn-primary" href="./solar-sequence.html">Play Solar Sequence</a>
+      </article>
+      <article class="game-card">
+        <h2>Solar Slide</h2>
+        <p>Restore the solar grid by sliding numbered tiles back into position with the fewest moves possible.</p>
+        <a class="btn btn-primary" href="./solar-slide.html">Play Solar Slide</a>
+      </article>
+    </section>
+    <div class="footer">© Solar Neo — Game Room</div>
+  </div>
+  <script type="module">
+    import { initNavigation, initTheme, initSecretGame } from '../assets/js/common.js';
+    initTheme();
+    initNavigation();
+    initSecretGame();
+  </script>
+</body>
+</html>

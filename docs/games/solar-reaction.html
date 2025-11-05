@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solar Neo — Solar Reaction</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .reaction-panel{display:flex;flex-direction:column;gap:18px;align-items:center;text-align:center;padding:24px}
+    .reaction-screen{width:100%;max-width:380px;height:220px;border-radius:18px;border:1px solid rgba(179,136,255,.35);background:rgba(5,10,22,.85);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;cursor:pointer;transition:background .2s,color .2s;box-shadow:0 16px 32px rgba(5,10,22,.45)}
+    .reaction-screen[data-state="armed"]{background:#f9a825;color:#050a16}
+    .reaction-screen[data-state="ready"]{background:#4caf50;color:#050a16}
+    .reaction-stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .reaction-stats span{padding:6px 12px;border-radius:999px;background:rgba(179,136,255,.18);border:1px solid rgba(179,136,255,.35);font-weight:600;font-size:14px;color:#e6ecff}
+    .reaction-message{min-height:24px;font-size:14px;color:var(--muted);width:100%}
+    @media (max-width:520px){
+      .reaction-panel{padding:20px 16px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-brand">
+        <div class="logo"></div>
+        <div class="title">Solar Neo</div>
+      </div>
+      <button id="theme-btn" class="btn theme-toggle">Theme: dark</button>
+      <button class="btn nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false">Menu</button>
+      <nav id="site-nav" class="header-nav" data-nav>
+        <a class="btn" href="../../index.HTML">Home</a>
+        <a class="btn" href="../documentation.html">Documentation</a>
+        <a class="btn" href="../versions.html">Release history</a>
+        <a class="btn" href="../latest.html">Latest download</a>
+      </nav>
+    </div>
+    <div class="panel reaction-panel">
+      <h1>Solar Reaction</h1>
+      <div class="reaction-stats">
+        <span id="reaction-last">Last: —</span>
+        <span id="reaction-best">Best: —</span>
+      </div>
+      <div id="reaction-screen" class="reaction-screen" role="button" aria-live="polite">Tap to arm</div>
+      <button id="reaction-reset" class="btn btn-primary" type="button">Reset stats</button>
+      <div id="reaction-message" class="reaction-message">Arm the panel, wait for the pulse, then tap as fast as possible.</div>
+    </div>
+    <div class="footer">© Solar Neo — Solar Reaction</div>
+  </div>
+  <script type="module">
+    import { initNavigation, initTheme, initSecretGame } from '../assets/js/common.js';
+    import { initReaction } from '../assets/js/games/solar-reaction.js';
+    initTheme();
+    initNavigation();
+    initSecretGame();
+    initReaction();
+  </script>
+</body>
+</html>

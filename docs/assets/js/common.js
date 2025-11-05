@@ -88,6 +88,8 @@ function buildNav() {
   const isDocsDocumentation = inDocs && normalized.endsWith('/documentation.html');
   const isDocsVersions = inDocs && (normalized.endsWith('/versions.html') || normalized.endsWith('/version.html'));
   const isDocsLatest = inDocs && normalized.endsWith('/latest.html');
+  const inGames = inDocs && normalized.includes('/games/');
+  const isDocsGames = inGames;
   const isHome = !inDocs && normalized.endsWith('/index.html');
 
   const nav = document.createElement('nav');
@@ -100,6 +102,7 @@ function buildNav() {
     { label: 'Documentation', href: inDocs ? './documentation.html' : './docs/documentation.html', active: isDocsDocumentation || isDocsIndex },
     { label: 'Release history', href: inDocs ? './versions.html' : './docs/versions.html', active: isDocsVersions },
     { label: 'Latest download', href: inDocs ? './latest.html' : './docs/latest.html', active: isDocsLatest },
+    { label: 'Game room', href: inDocs ? (inGames ? './index.html' : './games/index.html') : './docs/games/index.html', active: isDocsGames },
   ];
 
   items.forEach(item => {

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solar Neo — Solar Glider</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .game-panel{display:flex;flex-direction:column;gap:18px;align-items:center;text-align:center;padding:24px}
+    .game-head{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;flex-wrap:wrap}
+    .game-head h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
+    .score-chip{padding:6px 12px;border-radius:999px;background:rgba(179,136,255,.18);border:1px solid rgba(179,136,255,.35);font-weight:600;font-size:14px;color:#e6ecff}
+    #flappy-canvas{width:100%;max-width:480px;border-radius:18px;border:1px solid rgba(179,136,255,.35);background:#050a16;box-shadow:0 16px 36px rgba(5,10,22,.45);touch-action:none}
+    #flappy-start{width:100%;max-width:320px}
+    .game-status{min-height:24px;font-size:14px;color:var(--muted);width:100%}
+    .game-note{font-size:12px;color:var(--muted)}
+    @media (max-width:520px){
+      .game-panel{padding:20px 18px}
+      .game-head h1{font-size:18px}
+      .score-chip{width:100%;text-align:center}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-brand">
+        <div class="logo"></div>
+        <div class="title">Solar Neo</div>
+      </div>
+      <button id="theme-btn" class="btn theme-toggle">Theme: dark</button>
+      <button class="btn nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false">Menu</button>
+      <nav id="site-nav" class="header-nav" data-nav>
+        <a class="btn" href="../../index.HTML">Home</a>
+        <a class="btn" href="../documentation.html">Documentation</a>
+        <a class="btn" href="../versions.html">Release history</a>
+        <a class="btn" href="../latest.html">Latest download</a>
+      </nav>
+    </div>
+    <div class="panel game-panel">
+      <div class="game-head">
+        <h1>Solar Glider</h1>
+        <div id="flappy-score" class="score-chip">Score: 0 · Best: 0</div>
+      </div>
+      <canvas id="flappy-canvas" width="360" height="540" aria-label="Solar Neo flight test"></canvas>
+      <button id="flappy-start" class="btn btn-primary" type="button">Start flight</button>
+      <div id="flappy-status" class="game-status">Tap start or anywhere on the sky to begin. Works great on mobile!</div>
+      <div class="game-note">Tap the canvas to flap. Rotate your phone for extra challenge.</div>
+    </div>
+    <div class="footer">© Solar Neo — Solar Glider</div>
+  </div>
+  <script type="module">
+    import { initNavigation, initTheme, initSecretGame } from '../assets/js/common.js';
+    import { initFlappy } from '../assets/js/games/solar-glider.js';
+    initTheme();
+    initNavigation();
+    initSecretGame();
+    initFlappy();
+  </script>
+</body>
+</html>
