@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solar Neo — Solar Sequence</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .sequence-panel{display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;padding:24px}
+    .sequence-stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .sequence-stats span{padding:6px 14px;border-radius:999px;background:rgba(179,136,255,.18);border:1px solid rgba(179,136,255,.35);font-weight:600;font-size:14px;color:#e6ecff}
+    .sequence-grid{display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:18px;width:100%;max-width:380px}
+    .sequence-pad{position:relative;display:flex;align-items:center;justify-content:center;height:150px;border-radius:28px;border:none;color:#050a16;font-size:20px;font-weight:700;cursor:pointer;transition:transform .12s,box-shadow .12s,opacity .12s;box-shadow:0 16px 28px rgba(5,10,22,.45)}
+    .sequence-pad:focus-visible{outline:3px solid rgba(255,255,255,.65);outline-offset:4px}
+    .sequence-pad[data-active="true"]{transform:scale(1.05);box-shadow:0 20px 38px rgba(5,10,22,.55);opacity:.9}
+    .sequence-pad[data-pad="0"]{background:#ff8a65}
+    .sequence-pad[data-pad="1"]{background:#4db6ac}
+    .sequence-pad[data-pad="2"]{background:#9575cd}
+    .sequence-pad[data-pad="3"]{background:#fdd835}
+    #sequence-message{min-height:24px;color:var(--muted);max-width:420px}
+    @media (max-width:560px){
+      .sequence-panel{padding:20px 16px}
+      .sequence-grid{gap:14px}
+      .sequence-pad{height:120px;border-radius:22px;font-size:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-brand">
+        <div class="logo"></div>
+        <div class="title">Solar Neo</div>
+      </div>
+      <button id="theme-btn" class="btn theme-toggle">Theme: dark</button>
+      <button class="btn nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false">Menu</button>
+      <nav id="site-nav" class="header-nav" data-nav>
+        <a class="btn" href="../../index.HTML">Home</a>
+        <a class="btn" href="../documentation.html">Documentation</a>
+        <a class="btn" href="../versions.html">Release history</a>
+        <a class="btn" href="../latest.html">Latest download</a>
+      </nav>
+    </div>
+    <div class="panel sequence-panel">
+      <h1>Solar Sequence</h1>
+      <p id="sequence-message">Study the energy pulse pattern, then repeat it without missing a beat.</p>
+      <div class="sequence-stats">
+        <span id="sequence-level">Level: —</span>
+        <span id="sequence-best">Best: —</span>
+      </div>
+      <div class="sequence-grid">
+        <button class="sequence-pad" type="button" data-pad="0" data-active="false" tabindex="0">A</button>
+        <button class="sequence-pad" type="button" data-pad="1" data-active="false" tabindex="0">B</button>
+        <button class="sequence-pad" type="button" data-pad="2" data-active="false" tabindex="0">C</button>
+        <button class="sequence-pad" type="button" data-pad="3" data-active="false" tabindex="0">D</button>
+      </div>
+      <button id="sequence-start" class="btn btn-primary" type="button">Loading…</button>
+    </div>
+    <div class="footer">© Solar Neo — Solar Sequence</div>
+  </div>
+  <script type="module">
+    import { initNavigation, initTheme, initSecretGame } from '../assets/js/common.js';
+    import { initSequence } from '../assets/js/games/solar-sequence.js';
+    initTheme();
+    initNavigation();
+    initSecretGame();
+    initSequence();
+  </script>
+</body>
+</html>

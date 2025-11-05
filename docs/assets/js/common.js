@@ -205,7 +205,7 @@ export function initNavigation() {
 function resolveSecretUrl() {
   const path = (location.pathname || '').toLowerCase();
   const inDocs = path.includes('/docs/');
-  return inDocs ? './games/solar-sprint.html' : './docs/games/solar-sprint.html';
+  return inDocs ? './flappy.html' : './docs/flappy.html';
 }
 
 export function initSecretGame() {

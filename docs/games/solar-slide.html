@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solar Neo — Solar Slide</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .slide-panel{display:flex;flex-direction:column;gap:20px;align-items:center;text-align:center;padding:24px}
+    .slide-stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .slide-stats span{padding:6px 14px;border-radius:999px;background:rgba(179,136,255,.18);border:1px solid rgba(179,136,255,.35);font-weight:600;font-size:14px;color:#e6ecff}
+    .slide-grid{display:grid;grid-template-columns:repeat(4,minmax(64px,1fr));gap:12px;width:100%;max-width:360px}
+    .slide-tile{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;border:none;border-radius:18px;font-size:24px;font-weight:700;color:#050a16;background:#b388ff;cursor:pointer;transition:transform .12s,box-shadow .12s}
+    .slide-tile[data-empty="true"]{background:rgba(179,136,255,.16);cursor:default;box-shadow:none}
+    .slide-tile:not([data-empty="true"]):active{transform:scale(.96)}
+    .slide-tile:focus-visible{outline:3px solid rgba(255,255,255,.65);outline-offset:3px}
+    #slide-message{min-height:24px;color:var(--muted);max-width:440px}
+    @media (max-width:560px){
+      .slide-panel{padding:20px 16px}
+      .slide-grid{gap:10px}
+      .slide-tile{border-radius:16px;font-size:20px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-brand">
+        <div class="logo"></div>
+        <div class="title">Solar Neo</div>
+      </div>
+      <button id="theme-btn" class="btn theme-toggle">Theme: dark</button>
+      <button class="btn nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false">Menu</button>
+      <nav id="site-nav" class="header-nav" data-nav>
+        <a class="btn" href="../../index.HTML">Home</a>
+        <a class="btn" href="../documentation.html">Documentation</a>
+        <a class="btn" href="../versions.html">Release history</a>
+        <a class="btn" href="../latest.html">Latest download</a>
+      </nav>
+    </div>
+    <div class="panel slide-panel">
+      <h1>Solar Slide</h1>
+      <p id="slide-message">Tap shuffle to randomize the energy tiles and begin.</p>
+      <div class="slide-stats">
+        <span id="slide-moves">Moves: 0</span>
+        <span id="slide-time">Time: 0s</span>
+        <span id="slide-best">Best: —</span>
+      </div>
+      <div id="slide-grid" class="slide-grid" aria-label="Sliding puzzle grid"></div>
+      <button id="slide-shuffle" class="btn btn-primary" type="button">Shuffle board</button>
+    </div>
+    <div class="footer">© Solar Neo — Solar Slide</div>
+  </div>
+  <script type="module">
+    import { initNavigation, initTheme, initSecretGame } from '../assets/js/common.js';
+    import { initSlide } from '../assets/js/games/solar-slide.js';
+    initTheme();
+    initNavigation();
+    initSecretGame();
+    initSlide();
+  </script>
+</body>
+</html>
